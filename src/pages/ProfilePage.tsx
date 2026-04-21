@@ -5,9 +5,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import ListingGrid from '@/components/listings/ListingGrid'
 import EscrowTracker from '@/components/offers/EscrowTracker'
+import { OfferCard } from '@/components/offers/OfferCard'
 import { useAuth } from '@/contexts/AuthContext'
 import { useListings, useDeleteListing } from '@/hooks/useListings'
 import { useMyOffers, useUpdateOffer } from '@/hooks/useOffers'
@@ -176,54 +176,29 @@ export default function ProfilePage() {
         <TabsContent value="offers-received" className="mt-6">
           <h2 className="font-semibold mb-4">Offers Received on Your Listings</h2>
           {offersReceived.length === 0 ? (
-            <p className="text-gray-500">No offers received yet on your listings.</p>
+            <p className="text-slate-500">No offers received yet on your listings.</p>
           ) : (
             <div className="space-y-3">
-              {offersReceived.map((offer) => {
-                const listing = (offer as any).listing
-                return (
-                  <Card key={offer.id}>
-                    <CardContent className="pt-4 flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="font-semibold">{formatPrice(offer.amount, offer.currency)}</p>
-                        {listing && (
-                          <p className="text-sm text-gray-600">
-                            {listing.matches?.team1 ?? 'TBD'} vs {listing.matches?.team2 ?? 'TBD'} · Section {listing.section}
-                          </p>
-                        )}
-                        {offer.message && <p className="text-sm text-gray-600 italic mt-1">{offer.message}</p>}
-                        <p className="text-xs text-gray-400 mt-1">{offer.created_at ? formatDate(offer.created_at) : ''}</p>
-                      </div>
-                      <div className="flex items-center gap-2 ml-4">
-                        <Badge variant={offer.status === 'accepted' ? 'default' : offer.status === 'declined' ? 'destructive' : 'secondary'}>
-                          {offer.status}
-                        </Badge>
-                        {offer.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              disabled={updateOffer.isPending}
-                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
-                              style={{ backgroundColor: '#16a34a', color: 'white' }}
-                            >
-                              {updateOffer.isPending ? '...' : 'Accept'}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={updateOffer.isPending}
-                              className="text-red-600 border-red-300"
-                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
-                            >
-                              {updateOffer.isPending ? '...' : 'Decline'}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
+              {offersReceived.map((offer) => (
+                <OfferCard
+                  key={offer.id}
+                  offer={offer}
+                  role="seller"
+                  isPending={updateOffer.isPending}
+                  onAccept={() =>
+                    updateOffer.mutate(
+                      { id: offer.id, status: 'accepted' },
+                      { onSuccess: () => toast({ title: 'Offer accepted! 🎉' }) }
+                    )
+                  }
+                  onDecline={() =>
+                    updateOffer.mutate(
+                      { id: offer.id, status: 'declined' },
+                      { onSuccess: () => toast({ title: 'Offer declined' }) }
+                    )
+                  }
+                />
+              ))}
             </div>
           )}
         </TabsContent>
@@ -231,42 +206,23 @@ export default function ProfilePage() {
         <TabsContent value="offers-sent" className="mt-6">
           <h2 className="font-semibold mb-4">Offers You've Made</h2>
           {myOffers.length === 0 ? (
-            <p className="text-gray-500">You haven't made any offers yet.</p>
+            <p className="text-slate-500">You haven't made any offers yet.</p>
           ) : (
             <div className="space-y-3">
-              {myOffers.map((offer) => {
-                const listing = (offer as typeof offer & { listing?: { id: string; section: string; match?: { team1: string | null; team2: string | null } | null } | null }).listing
-                return (
-                  <Card key={offer.id}>
-                    <CardContent className="pt-4 flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold">{formatPrice(offer.amount, offer.currency)}</p>
-                        {listing && (
-                          <p className="text-sm text-gray-600">
-                            {listing.match?.team1 ?? 'TBD'} vs {listing.match?.team2 ?? 'TBD'} · Section {listing.section}
-                          </p>
-                        )}
-                        <p className="text-xs text-gray-400">{offer.created_at ? formatDate(offer.created_at) : ''}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={offer.status === 'accepted' ? 'default' : offer.status === 'declined' ? 'destructive' : 'secondary'}>
-                          {offer.status}
-                        </Badge>
-                        {offer.status === 'pending' && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={updateOffer.isPending}
-                            onClick={() => updateOffer.mutate({ id: offer.id, status: 'withdrawn' })}
-                          >
-                            {updateOffer.isPending ? '...' : 'Withdraw'}
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
+              {myOffers.map((offer) => (
+                <OfferCard
+                  key={offer.id}
+                  offer={offer}
+                  role="buyer"
+                  isPending={updateOffer.isPending}
+                  onWithdraw={() =>
+                    updateOffer.mutate(
+                      { id: offer.id, status: 'withdrawn' },
+                      { onSuccess: () => toast({ title: 'Offer withdrawn' }) }
+                    )
+                  }
+                />
+              ))}
             </div>
           )}
         </TabsContent>

@@ -70,6 +70,11 @@ export function useUpdateOffer() {
       if (error) throw error
       return data as Database['public']['Tables']['offers']['Row']
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['offers'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['offers-received'] })
+      queryClient.invalidateQueries({ queryKey: ['my-offers'] })
+      queryClient.invalidateQueries({ queryKey: ['listings'] })
+    },
   })
 }

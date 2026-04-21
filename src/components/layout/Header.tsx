@@ -3,6 +3,7 @@ import { Trophy, Menu, User, LogOut, ListChecks, Home, Ticket } from 'lucide-rea
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/contexts/AuthContext'
+import { usePendingOffersCount } from '@/hooks/usePendingOffersCount'
 import { useState, useEffect } from 'react'
 import { LoginModal } from '@/components/auth/LoginModal'
 
@@ -12,6 +13,7 @@ export default function Header() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
+  const pendingOffers = usePendingOffersCount(user?.id)
 
   useEffect(() => {
     if (searchParams.get('openlogin') === '1') {
@@ -61,15 +63,25 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-2">
-                <Link to="/profile">
+                <Link to="/profile" className="relative">
                   <Avatar className="w-9 h-9 border-2 border-slate-100">
                     {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt={profile.full_name ?? ''} />}
                     <AvatarFallback className="text-sm font-bold bg-gradient-to-br from-blue-50 to-rose-50 text-slate-700">{initials}</AvatarFallback>
                   </Avatar>
+                  {pendingOffers > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                      {pendingOffers > 9 ? '9+' : pendingOffers}
+                    </span>
+                  )}
                 </Link>
-                <Link to="/profile" className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5">
+                <Link to="/profile" className="relative text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5">
                   <User className="w-4 h-4" />
                   Profile
+                  {pendingOffers > 0 && (
+                    <span className="ml-0.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                      {pendingOffers > 9 ? '9+' : pendingOffers}
+                    </span>
+                  )}
                 </Link>
                 <button
                   onClick={() => signOut().then(() => navigate('/'))}
