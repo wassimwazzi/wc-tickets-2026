@@ -52,7 +52,7 @@ src/
   App.tsx             # Root router
   index.css           # Tailwind v4 + WC theme tokens
 supabase/
-  migrations/         # SQL migrations (apply with `supabase db reset`)
+  migrations/         # SQL migrations — apply with psql, NOT supabase db reset
   seed.sql            # 104 WC 2026 matches
 ```
 
@@ -100,18 +100,39 @@ supabase/
 
 ## Database
 
+### ⚠️ Migration Rules — READ FIRST
+**NEVER run `supabase db reset` unless it is the absolute only option** — it wipes all data.
+
+To apply a new migration:
+```bash
+# Apply a single migration file directly (preferred — preserves data)
+docker exec supabase_db_wc-tickets-2026 psql -U postgres -d postgres \
+  -f /path/to/supabase/migrations/YYYYMMDD_name.sql
+
+# Or pipe inline SQL
+docker exec supabase_db_wc-tickets-2026 psql -U postgres -d postgres \
+  -c "ALTER TABLE foo ADD COLUMN bar text;"
+
+# supabase db push can also apply pending migrations without resetting
+npx supabase db push
+```
+
+`supabase db reset` is only acceptable when:
+- Setting up a brand-new local environment from scratch
+- Explicitly asked by the user
+
 ### Local Dev
 ```bash
 npx supabase start        # start containers
-npx supabase db reset     # apply migrations + seed
 npx supabase stop         # stop containers
+# To apply new migrations, use docker exec psql (see above)
 ```
 
 ### Schema Summary
 - `matches` — 104 WC 2026 fixtures (read-only seed)
 - `profiles` — auto-created on auth signup; has `contact_preference`, `contact_info`
 - `listings` — ticket listings with `status: available | pending | sold`
-- `offers` — buyer offers with `status: pending | accepted | declined | withdrawn | completed`
+- `offers` — buyer offers with `status: pending | countered | accepted | declined | withdrawn | completed`
 - `escrow_transactions` — created on offer acceptance; tracks handoff flow
 - `reviews` — post-transaction reviews
 
