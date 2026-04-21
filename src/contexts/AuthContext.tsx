@@ -27,24 +27,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) loadProfile(session.user.id)
+      if (session?.user) loadProfile(session.user.id, session.user.email)
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) loadProfile(session.user.id)
+      if (session?.user) loadProfile(session.user.id, session.user.email)
       else setProfile(null)
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  async function loadProfile(userId: string) {
+  async function loadProfile(userId: string, userEmail?: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
-    if (data && !data.full_name && user?.email) {
-      const email_prefix = user.email.split('@')[0]
+    if (data && !data.full_name && userEmail) {
+      const email_prefix = userEmail.split('@')[0]
       await supabase.from('profiles').update({ full_name: email_prefix }).eq('id', userId)
       setProfile({ ...data, full_name: email_prefix })
     } else {
