@@ -24,7 +24,7 @@ const MOCK_LISTINGS = [
       team2_code: 'CA',
       stage: 'GROUP',
       city: 'Los Angeles',
-      country: 'United States',
+      country: 'USA',
       venue: 'SoFi Stadium',
       match_date: '2026-06-11T00:00:00.000Z',
     },

@@ -22,7 +22,7 @@ const STAGES = [
 ]
 
 const LOCATIONS = [
-  { value: 'United States', label: '🇺🇸 USA' },
+  { value: 'USA', label: '🇺🇸 USA' },
   { value: 'Canada', label: '🇨🇦 Canada' },
   { value: 'Mexico', label: '🇲🇽 Mexico' },
 ]
