@@ -6,9 +6,30 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    supabase.auth.exchangeCodeForSession(window.location.search)
-      .then(() => navigate('/'))
-      .catch(() => navigate('/'))
+    // Handle both PKCE (?code=) and implicit hash fragment (#access_token=) flows
+    const hash = window.location.hash
+    const search = window.location.search
+
+    if (search.includes('code=')) {
+      // PKCE flow (OAuth providers)
+      supabase.auth.exchangeCodeForSession(search)
+        .then(() => navigate('/'))
+        .catch(() => navigate('/'))
+    } else if (hash.includes('access_token=')) {
+      // Implicit flow (magic link / email OTP) — Supabase client auto-parses hash
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+        if (event === 'SIGNED_IN') {
+          subscription.unsubscribe()
+          navigate('/')
+        }
+      })
+      // Safety fallback: if already signed in before listener fires
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) navigate('/')
+      })
+    } else {
+      navigate('/')
+    }
   }, [navigate])
 
   return (

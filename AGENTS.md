@@ -92,7 +92,7 @@ supabase/
 - `/` → HomePage
 - `/browse` → BrowsePage
 - `/listing/:id` → ListingDetailPage
-- `/create` → CreateListingPage
+- `/sell` → CreateListingPage
 - `/profile` → ProfilePage
 - `/auth/callback` → AuthCallbackPage
 

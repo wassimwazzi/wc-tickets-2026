@@ -29,7 +29,7 @@ export function useListings(filters?: ListingFilters) {
         .select(`
           *,
           match:matches(*),
-          seller:profiles(*)
+          seller:profiles!listings_seller_id_fkey(*)
         `)
         .order('created_at', { ascending: false })
 
@@ -57,7 +57,7 @@ export function useListing(id: string | undefined) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from('listings')
-        .select(`*, match:matches(*), seller:profiles(*)`)
+        .select(`*, match:matches(*), seller:profiles!listings_seller_id_fkey(*)`)
         .eq('id', id)
         .single()
       if (error) throw error

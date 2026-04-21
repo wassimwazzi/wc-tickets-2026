@@ -43,7 +43,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function loadProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
-    setProfile(data)
+    if (data && !data.full_name && user?.email) {
+      const email_prefix = user.email.split('@')[0]
+      await supabase.from('profiles').update({ full_name: email_prefix }).eq('id', userId)
+      setProfile({ ...data, full_name: email_prefix })
+    } else {
+      setProfile(data)
+    }
   }
 
   async function signInWithGoogle() {

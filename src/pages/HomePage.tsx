@@ -63,7 +63,7 @@ export default function HomePage() {
                   <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
               </Link>
-              <Link to="/create">
+              <Link to="/sell">
                 <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white bg-transparent hover:bg-white/10">
                   Sell Tickets
                 </Button>

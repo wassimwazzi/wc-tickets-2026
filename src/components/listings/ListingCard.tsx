@@ -25,7 +25,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.15 }}>
-      <Link to={`/listing/${listing.id}`}>
+      <Link to={`/listings/${listing.id}`}>
         <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
           {/* Match header */}
           {match && (

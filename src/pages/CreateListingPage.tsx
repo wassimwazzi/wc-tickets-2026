@@ -23,7 +23,7 @@ const schema = z.object({
   seat_number: z.string().min(1, 'Seat number is required'),
   quantity: z.number().int().min(1).max(10),
   category: z.number().int().min(1).max(4),
-  price: z.number().positive().optional().nullable(),
+  price: z.number().positive({ message: 'Price must be positive' }).optional().nullable(),
   currency: z.enum(['USD', 'CAD', 'MXN']),
   notes: z.string().optional(),
 })
@@ -31,7 +31,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function CreateListingPage() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
   const createListing = useCreateListing()
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null)
@@ -45,6 +45,10 @@ export default function CreateListingPage() {
       currency: 'USD',
     },
   })
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>
+  }
 
   if (!user) {
     return <Navigate to="/?openlogin=1" replace />
@@ -165,7 +169,7 @@ export default function CreateListingPage() {
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  {...register('price', { valueAsNumber: true, setValueAs: v => v === '' ? null : parseFloat(v) })}
+                  {...register('price', { setValueAs: v => (v === '' || v == null) ? null : parseFloat(v) })}
                 />
                 {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
               </div>

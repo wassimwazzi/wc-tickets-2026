@@ -23,7 +23,7 @@ export default function Header() {
   const navLinks = [
     { to: '/', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { to: '/browse', label: 'Browse Tickets', icon: <Ticket className="w-4 h-4" /> },
-    { to: '/create', label: 'Sell Tickets', icon: <ListChecks className="w-4 h-4" /> },
+    { to: '/sell', label: 'Sell Tickets', icon: <ListChecks className="w-4 h-4" /> },
   ]
 
   const initials = profile?.full_name

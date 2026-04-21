@@ -17,7 +17,7 @@ type Listing = Database['public']['Tables']['listings']['Row'] & {
 }
 
 const offerSchema = z.object({
-  amount: z.number({ message: 'Amount must be a number' }).positive('Amount must be positive'),
+  amount: z.number({ message: 'Amount must be a number' }).positive({ message: 'Amount must be positive' }),
   currency: z.enum(['USD', 'CAD', 'MXN']),
   message: z.string().optional(),
 })
