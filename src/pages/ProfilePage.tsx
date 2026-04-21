@@ -150,6 +150,7 @@ export default function ProfilePage() {
                     size="sm"
                     variant="outline"
                     className="text-red-600 border-red-300"
+                    aria-label="Delete listing"
                     onClick={async () => {
                       await deleteListing.mutateAsync(listing.id)
                       toast({ title: 'Listing deleted' })
