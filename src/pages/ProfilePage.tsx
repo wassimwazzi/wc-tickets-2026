@@ -153,8 +153,12 @@ export default function ProfilePage() {
                     aria-label="Delete listing"
                     disabled={deleteListing.isPending}
                     onClick={async () => {
-                      await deleteListing.mutateAsync(listing.id)
-                      toast({ title: 'Listing deleted' })
+                      try {
+                        await deleteListing.mutateAsync(listing.id)
+                        toast({ title: 'Listing deleted' })
+                      } catch {
+                        toast({ title: 'Failed to delete listing', description: 'Please try again.', variant: 'destructive' })
+                      }
                     }}
                   >
                     {deleteListing.isPending ? (

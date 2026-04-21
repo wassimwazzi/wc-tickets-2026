@@ -63,7 +63,7 @@ export default function BrowsePage() {
     status: 'available' as const,
   }), [category, minPrice, maxPrice])
 
-  const { data: allListings = [], isLoading } = useListings(serverFilters)
+  const { data: allListings = [], isLoading, isError } = useListings(serverFilters)
 
   // Client-side filtering for joined match fields (stage, country, text, date)
   const filteredListings = useMemo(() => {
@@ -384,7 +384,12 @@ export default function BrowsePage() {
         </div>
 
         {/* Grid */}
-        {isLoading ? (
+        {isError ? (
+          <div className="text-center py-20">
+            <p className="text-xl font-bold text-red-600 mb-2">Failed to load listings</p>
+            <p className="text-slate-500">Please refresh the page or try again later.</p>
+          </div>
+        ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-64 bg-white rounded-xl border border-slate-200 animate-pulse" />

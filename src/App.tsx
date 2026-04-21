@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Toaster } from './components/ui/toaster'
+import { Toaster, toast } from './components/ui/toaster'
 import { AuthProvider } from './contexts/AuthContext'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
@@ -15,6 +15,11 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       staleTime: 30000,
+    },
+    mutations: {
+      onError: () => {
+        toast({ title: 'Something went wrong', description: 'Please try again.', variant: 'destructive' })
+      },
     },
   },
 })
