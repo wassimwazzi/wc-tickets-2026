@@ -63,10 +63,10 @@ export const STAGE_LABELS: Record<string, string> = {
 }
 
 export const CATEGORY_LABELS: Record<number, string> = {
-  1: 'Cat 1 – Premium',
-  2: 'Cat 2 – Sideline',
-  3: 'Cat 3 – Behind Goal',
-  4: 'Cat 4 – Upper Tier',
+  1: 'Category 1',
+  2: 'Category 2',
+  3: 'Category 3',
+  4: 'Category 4',
 }
 
 export const CATEGORY_COLORS: Record<number, string> = {
