@@ -1,7 +1,7 @@
 # High Priority
 - [x] Use 21st.dev to redesign the browse page and listing detail page
 - [x] Browse tickets button is bigger than sell tickets button on home page, should be equal size
-- [ ] Redesign UI
+- [x] Redesign UI
 - [ ] Show offers submitted and received
 - [ ] Remove all API keys from code, and use environment variables instead. Add instructions in README for setting up .env file.
 - [ ] Add more tests for critical flows (creating listing, making offer, accepting offer, etc.)

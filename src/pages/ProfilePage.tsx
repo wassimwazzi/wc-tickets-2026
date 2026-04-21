@@ -35,6 +35,23 @@ export default function ProfilePage() {
   const deleteListing = useDeleteListing()
   const updateOffer = useUpdateOffer()
 
+  // Offers received on user's listings (as a seller)
+  const { data: offersReceived = [] } = useQuery({
+    queryKey: ['offers-received', user?.id, myListings],
+    queryFn: async () => {
+      if (!user || myListings.length === 0) return []
+      const listingIds = myListings.map(l => l.id)
+      const { data, error } = await supabase
+        .from('offers')
+        .select('*, listing:listings(id, section, match_id, matches(team1, team2))')
+        .in('listing_id', listingIds)
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return (data ?? []) as any[]
+    },
+    enabled: !!user && myListings.length > 0,
+  })
+
   const { data: transactions = [] } = useQuery({
     queryKey: ['transactions', user?.id],
     queryFn: async (): Promise<EscrowRow[]> => {
@@ -104,6 +121,7 @@ export default function ProfilePage() {
       <Tabs defaultValue="listings">
         <TabsList>
           <TabsTrigger value="listings">My Listings ({myListings.length})</TabsTrigger>
+          <TabsTrigger value="offers-received">Offers Received ({offersReceived.length})</TabsTrigger>
           <TabsTrigger value="offers-sent">Offers Sent ({myOffers.length})</TabsTrigger>
           <TabsTrigger value="transactions">Transactions ({transactions.length})</TabsTrigger>
           <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
@@ -141,6 +159,59 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="offers-received" className="mt-6">
+          <h2 className="font-semibold mb-4">Offers Received on Your Listings</h2>
+          {offersReceived.length === 0 ? (
+            <p className="text-gray-500">No offers received yet on your listings.</p>
+          ) : (
+            <div className="space-y-3">
+              {offersReceived.map((offer) => {
+                const listing = (offer as any).listing
+                return (
+                  <Card key={offer.id}>
+                    <CardContent className="pt-4 flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="font-semibold">{formatPrice(offer.amount, offer.currency)}</p>
+                        {listing && (
+                          <p className="text-sm text-gray-600">
+                            {listing.matches?.team1 ?? 'TBD'} vs {listing.matches?.team2 ?? 'TBD'} · Section {listing.section}
+                          </p>
+                        )}
+                        {offer.message && <p className="text-sm text-gray-600 italic mt-1">{offer.message}</p>}
+                        <p className="text-xs text-gray-400 mt-1">{offer.created_at ? formatDate(offer.created_at) : ''}</p>
+                      </div>
+                      <div className="flex items-center gap-2 ml-4">
+                        <Badge variant={offer.status === 'accepted' ? 'default' : offer.status === 'declined' ? 'destructive' : 'secondary'}>
+                          {offer.status}
+                        </Badge>
+                        {offer.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
+                              style={{ backgroundColor: '#16a34a', color: 'white' }}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 border-red-300"
+                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
+                            >
+                              Decline
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
             </div>
           )}
         </TabsContent>
