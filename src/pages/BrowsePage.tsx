@@ -131,7 +131,7 @@ export default function BrowsePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#FAFAFA]">
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-700 via-blue-600 to-orange-500 text-white py-12 pb-0">
         <div className="container mx-auto px-4">
@@ -147,7 +147,7 @@ export default function BrowsePage() {
                 placeholder="Search by team, city, venue…"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="pl-10 h-12 text-base bg-white text-slate-900 border-0 shadow-lg focus-visible:ring-2 focus-visible:ring-orange-400"
+                className="pl-10 h-12 text-base bg-white text-slate-900 border-0 shadow-lg focus-visible:ring-2 focus-visible:ring-orange-400 rounded-2xl"
               />
               {searchText && (
                 <button
@@ -164,7 +164,7 @@ export default function BrowsePage() {
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger
                 data-testid="filters-button"
-                className="h-12 px-5 bg-white text-blue-700 border-0 shadow-lg hover:bg-blue-50 font-semibold relative inline-flex items-center rounded-md text-sm"
+                className="h-12 px-5 bg-white text-blue-700 border-0 shadow-lg hover:bg-blue-50 font-semibold relative inline-flex items-center rounded-2xl text-sm"
               >
                 <SlidersHorizontal className="w-4 h-4 mr-2" />
                 Filters
