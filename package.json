@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "test:run": "vitest run",
+    "seed:db": "npx supabase db reset",
     "preview": "vite preview"
   },
   "dependencies": {
