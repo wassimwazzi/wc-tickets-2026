@@ -37,12 +37,16 @@ const FLAG_MAP: Record<string, string> = {
   POL: '🇵🇱', TUR: '🇹🇷', UKR: '🇺🇦', SRB: '🇷🇸', DEN: '🇩🇰',
   AUT: '🇦🇹', CZE: '🇨🇿', QAT: '🇶🇦', SEN: '🇸🇳', CMR: '🇨🇲',
   GHA: '🇬🇭', NGA: '🇳🇬', ALG: '🇩🇿', CIV: '🇨🇮', TUN: '🇹🇳',
-  SAU: '🇸🇦', IRN: '🇮🇷', SUI: '🇨🇭',
+  SAU: '🇸🇦', KSA: '🇸🇦', IRN: '🇮🇷', SUI: '🇨🇭',
+  RSA: '🇿🇦', EGY: '🇪🇬', HAI: '🇭🇹', CUR: '🇨🇼',
+  CPV: '🇨🇻', NOR: '🇳🇴', JOR: '🇯🇴', UZB: '🇺🇿',
+  UEPA: '🧩', UEPB: '🧩', UEPC: '🧩', UEPD: '🧩',
+  FP01: '🧩', FP02: '🧩',
 }
 
 export function getCountryFlag(code: string | null | undefined): string {
-  if (!code) return '🏳️'
-  return FLAG_MAP[code] || '🏳️'
+  if (!code) return '❔'
+  return FLAG_MAP[code] || '❔'
 }
 
 /** Alias for getCountryFlag */

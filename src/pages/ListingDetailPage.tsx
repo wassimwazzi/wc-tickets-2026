@@ -165,18 +165,20 @@ export default function ListingDetailPage() {
                             <Button
                               size="sm"
                               className="text-xs font-bold"
+                              disabled={updateOffer.isPending}
                               onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
                               style={{ backgroundColor: '#16a34a', color: 'white' }}
                             >
-                              <Check className="w-3 h-3 mr-1" /> Accept
+                              <Check className="w-3 h-3 mr-1" /> {updateOffer.isPending ? '...' : 'Accept'}
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
+                              disabled={updateOffer.isPending}
                               className="text-xs font-bold text-red-600 border-red-300 hover:bg-red-50"
                               onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
                             >
-                              Decline
+                              {updateOffer.isPending ? '...' : 'Decline'}
                             </Button>
                           </div>
                         )}

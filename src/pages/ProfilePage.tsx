@@ -151,12 +151,17 @@ export default function ProfilePage() {
                     variant="outline"
                     className="text-red-600 border-red-300"
                     aria-label="Delete listing"
+                    disabled={deleteListing.isPending}
                     onClick={async () => {
                       await deleteListing.mutateAsync(listing.id)
                       toast({ title: 'Listing deleted' })
                     }}
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    {deleteListing.isPending ? (
+                      <span className="w-3.5 h-3.5 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Trash2 className="w-3.5 h-3.5" />
+                    )}
                   </Button>
                 </div>
               ))}
@@ -193,18 +198,20 @@ export default function ProfilePage() {
                           <div className="flex gap-2">
                             <Button
                               size="sm"
+                              disabled={updateOffer.isPending}
                               onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
                               style={{ backgroundColor: '#16a34a', color: 'white' }}
                             >
-                              Accept
+                              {updateOffer.isPending ? '...' : 'Accept'}
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
+                              disabled={updateOffer.isPending}
                               className="text-red-600 border-red-300"
                               onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
                             >
-                              Decline
+                              {updateOffer.isPending ? '...' : 'Decline'}
                             </Button>
                           </div>
                         )}
@@ -245,9 +252,10 @@ export default function ProfilePage() {
                           <Button
                             size="sm"
                             variant="outline"
+                            disabled={updateOffer.isPending}
                             onClick={() => updateOffer.mutate({ id: offer.id, status: 'withdrawn' })}
                           >
-                            Withdraw
+                            {updateOffer.isPending ? '...' : 'Withdraw'}
                           </Button>
                         )}
                       </div>
