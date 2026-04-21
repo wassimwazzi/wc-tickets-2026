@@ -12,5 +12,7 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     globals: true,
     css: true,
+    include: ['src/test/**/*.test.ts', 'src/test/**/*.test.tsx'],
+    exclude: ['node_modules/**', 'tests/playwright/**'],
   },
 })

@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import AuthCallbackPage from './AuthCallbackPage'
+import AuthCallbackPage from '@/pages/AuthCallbackPage'
 
 const mocks = vi.hoisted(() => ({
   navigateMock: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-vi.mock('../lib/supabase', () => ({
+vi.mock('@/lib/supabase', () => ({
   supabase: {
     auth: {
       exchangeCodeForSession: mocks.exchangeCodeForSessionMock,

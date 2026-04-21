@@ -7,7 +7,7 @@
 - [ ] Add more tests for critical flows (creating listing, making offer, accepting offer, etc.)
 - [ ] Add loading states for all async actions (fetching listings, submitting offers, etc.)
 - [ ] Add error handling and display error messages to users when API calls fail
-- [ ] Move test files to a __tests__ directory for better organization
+- [x] Move test files to a __tests__ directory for better organization
 
 # Medium Priority
 - [ ] Add pagination or infinite scroll to browse page

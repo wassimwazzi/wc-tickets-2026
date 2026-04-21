@@ -1,6 +1,6 @@
 import { MemoryRouter } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
-import BrowsePage from './BrowsePage'
+import BrowsePage from '@/pages/BrowsePage'
 
 vi.mock('@/hooks/useListings', () => ({
   useListings: () => ({

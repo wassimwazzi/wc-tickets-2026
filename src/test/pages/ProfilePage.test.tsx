@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import ProfilePage from './ProfilePage'
+import ProfilePage from '@/pages/ProfilePage'
 
 vi.mock('@/contexts/AuthContext', () => ({
   useAuth: () => ({

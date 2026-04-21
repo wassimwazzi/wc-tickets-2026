@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Filter, X } from 'lucide-react'
+import { Filter, X, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import ListingGrid from '@/components/listings/ListingGrid'
@@ -64,13 +65,121 @@ export default function BrowsePage() {
     else setSearchParams({})
   }
 
-  const FiltersContent = () => (
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero Section - Vibrant gradient */}
+      <section className="bg-gradient-to-r from-blue-600 via-blue-700 to-orange-500 text-white py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Browse Tickets</h1>
+          <p className="text-blue-100 mb-8 text-lg">Find your perfect World Cup 2026 seat</p>
+          
+          {/* Search + Quick Filters */}
+          <div className="flex gap-3 flex-col md:flex-row md:items-end">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+              <Input
+                placeholder="Search by team, city, or match..."
+                className="pl-10 h-12 text-lg bg-white text-slate-900"
+              />
+            </div>
+            <Sheet>
+              <SheetTrigger className="inline-flex items-center justify-center rounded-md border border-input bg-white px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 cursor-pointer">
+                <Filter className="w-5 h-5 mr-2" />
+                Filters
+              </SheetTrigger>
+              <SheetContent side="left" className="w-full md:w-96">
+                <SheetHeader className="mb-6">
+                  <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <FiltersContent />
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Results Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <p className="text-slate-600 text-lg">
+              <span className="font-semibold text-slate-900">{filteredListings.length}</span> listings found
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Label htmlFor="sort" className="text-sm font-medium text-slate-600">Sort by:</Label>
+            <Select value={sort} onValueChange={(v) => setSort(v ?? 'newest')}>
+              <SelectTrigger id="sort" className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                <SelectItem value="price-desc">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Active Filters Chips */}
+        {(stage !== '_all' || category !== '_all' || minPrice || maxPrice || currency !== '_all') && (
+          <div className="mb-6 flex flex-wrap gap-2 items-center">
+            {stage !== '_all' && (
+              <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                {STAGES.find(s => s.value === stage)?.label}
+                <button onClick={() => setStage('_all')} className="hover:opacity-70">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            {category !== '_all' && (
+              <div className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                Category {category}
+                <button onClick={() => setCategory('_all')} className="hover:opacity-70">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-slate-600 underline">
+              Clear all
+            </Button>
+          </div>
+        )}
+
+        {/* Listings Grid */}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-slate-600">Loading listings...</p>
+          </div>
+        ) : filteredListings.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-2xl font-semibold text-slate-900 mb-2">No tickets found</p>
+            <p className="text-slate-600 mb-6">Try adjusting your filters or check back later</p>
+            <Button onClick={clearFilters}>Clear filters</Button>
+          </div>
+        ) : (
+          <ListingGrid listings={filteredListings} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+function FiltersContent() {
+  const [stage, setStage] = useState('_all')
+  const [category, setCategory] = useState('_all')
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [currency, setCurrency] = useState('_all')
+
+  return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label>Stage</Label>
-        <Select value={stage} onValueChange={handleStageChange}>
+        <Label className="font-semibold">Tournament Stage</Label>
+        <Select value={stage} onValueChange={(v) => setStage(v ?? '_all')}>
           <SelectTrigger>
-            <SelectValue placeholder="All Stages" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {STAGES.map(s => (
@@ -81,44 +190,46 @@ export default function BrowsePage() {
       </div>
 
       <div className="space-y-2">
-        <Label>Category</Label>
+        <Label className="font-semibold">Category</Label>
         <Select value={category} onValueChange={(v) => setCategory(v ?? '_all')}>
           <SelectTrigger>
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="_all">All Categories</SelectItem>
-            <SelectItem value="1">Cat 1 - Premium</SelectItem>
-            <SelectItem value="2">Cat 2 - Sideline</SelectItem>
-            <SelectItem value="3">Cat 3 - Behind Goal</SelectItem>
-            <SelectItem value="4">Cat 4 - Upper Tier</SelectItem>
+            <SelectItem value="1">Category 1 – Premium</SelectItem>
+            <SelectItem value="2">Category 2 – VIP</SelectItem>
+            <SelectItem value="3">Category 3 – Standard</SelectItem>
+            <SelectItem value="4">Category 4 – Economy</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label>Price Range</Label>
+        <Label className="font-semibold">Price Range</Label>
         <div className="flex gap-2">
           <Input
-            placeholder="Min"
             type="number"
+            placeholder="Min"
             value={minPrice}
-            onChange={e => setMinPrice(e.target.value)}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="flex-1"
           />
           <Input
-            placeholder="Max"
             type="number"
+            placeholder="Max"
             value={maxPrice}
-            onChange={e => setMaxPrice(e.target.value)}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="flex-1"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>Currency</Label>
+        <Label className="font-semibold">Currency</Label>
         <Select value={currency} onValueChange={(v) => setCurrency(v ?? '_all')}>
           <SelectTrigger>
-            <SelectValue placeholder="All Currencies" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="_all">All Currencies</SelectItem>
@@ -127,71 +238,6 @@ export default function BrowsePage() {
             <SelectItem value="MXN">MXN</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-
-      <button
-        className="w-full flex items-center justify-center gap-2 py-2 px-4 border rounded-lg text-sm hover:bg-gray-50"
-        onClick={clearFilters}
-      >
-        <X className="w-4 h-4" /> Clear Filters
-      </button>
-    </div>
-  )
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Russo One', sans-serif", color: '#0033A0' }}>
-        Browse Tickets
-      </h1>
-      <p className="text-gray-600 mb-6">Find the perfect seat for your World Cup experience</p>
-
-      <div className="flex gap-8">
-        {/* Sidebar - desktop */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl border p-5 sticky top-24">
-            <h2 className="font-semibold mb-4">Filters</h2>
-            <FiltersContent />
-          </div>
-        </aside>
-
-        {/* Main content */}
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-            {/* Mobile filter button */}
-            <div className="lg:hidden">
-              <Sheet>
-                <SheetTrigger className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm hover:bg-gray-50">
-                  <Filter className="w-4 h-4" /> Filters
-                </SheetTrigger>
-                <SheetContent side="left" className="w-72">
-                  <SheetHeader>
-                    <SheetTitle>Filters</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <FiltersContent />
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            <p className="text-sm text-gray-600 font-medium">
-              {filteredListings.length} listing{filteredListings.length !== 1 ? 's' : ''} found
-            </p>
-
-            <Select value={sort} onValueChange={(v) => setSort(v ?? 'newest')}>
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest First</SelectItem>
-                <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                <SelectItem value="price-desc">Price: High to Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <ListingGrid listings={filteredListings} isLoading={isLoading} />
-        </div>
       </div>
     </div>
   )
