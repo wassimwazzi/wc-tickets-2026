@@ -1,5 +1,5 @@
 # High Priority
-- [ ] Use 21st.dev to redesign the browse page and listing detail page
+- [x] Use 21st.dev to redesign the browse page and listing detail page
 - [ ] Browse tickets button is bigger than sell tickets button on home page, should be equal size
 - [ ] Redesign UI
 - [ ] Show offers submitted and received

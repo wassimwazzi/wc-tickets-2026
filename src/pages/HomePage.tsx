@@ -58,13 +58,13 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link to="/browse">
-                <Button size="lg" style={{ backgroundColor: '#F0A500', color: '#1E293B' }} className="text-lg px-8 font-bold hover:opacity-90">
+                <Button size="lg" className="text-lg px-8 font-bold" style={{ backgroundColor: '#F0A500', color: '#1E293B' }} >
                   Browse Tickets
                   <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
               </Link>
               <Link to="/sell">
-                <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white bg-transparent hover:bg-white/10">
+                <Button size="lg" className="text-lg px-8 font-bold text-white border-2" style={{ borderColor: '#F0A500', color: 'white' }} variant="outline">
                   Sell Tickets
                 </Button>
               </Link>
