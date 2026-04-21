@@ -1,5 +1,5 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Trophy, Menu, User, LogOut, ListChecks, Home, Ticket } from 'lucide-react'
+import { Trophy, Menu, User, LogOut, ListChecks, Home, Ticket, Bell } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/contexts/AuthContext'
@@ -63,25 +63,23 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-2">
             {user ? (
               <div className="flex items-center gap-2">
+                {pendingOffers > 0 && (
+                  <Link to="/profile" className="relative p-2 rounded-xl hover:bg-slate-50 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
+                    <Bell className="w-5 h-5 text-slate-600" />
+                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                      {pendingOffers > 9 ? '9+' : pendingOffers}
+                    </span>
+                  </Link>
+                )}
                 <Link to="/profile" className="relative">
                   <Avatar className="w-9 h-9 border-2 border-slate-100">
                     {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt={profile.full_name ?? ''} />}
                     <AvatarFallback className="text-sm font-bold bg-gradient-to-br from-blue-50 to-rose-50 text-slate-700">{initials}</AvatarFallback>
                   </Avatar>
-                  {pendingOffers > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
-                      {pendingOffers > 9 ? '9+' : pendingOffers}
-                    </span>
-                  )}
                 </Link>
-                <Link to="/profile" className="relative text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5">
+                <Link to="/profile" className="text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5">
                   <User className="w-4 h-4" />
                   Profile
-                  {pendingOffers > 0 && (
-                    <span className="ml-0.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-                      {pendingOffers > 9 ? '9+' : pendingOffers}
-                    </span>
-                  )}
                 </Link>
                 <button
                   onClick={() => signOut().then(() => navigate('/'))}
@@ -102,8 +100,16 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu */}
-          <div className="md:hidden">
+          {/* Mobile: bell + menu */}
+          <div className="md:hidden flex items-center gap-1">
+            {user && pendingOffers > 0 && (
+              <Link to="/profile" className="relative p-2 rounded-xl hover:bg-slate-100 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
+                <Bell className="w-5 h-5 text-slate-700" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                  {pendingOffers > 9 ? '9+' : pendingOffers}
+                </span>
+              </Link>
+            )}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger
                 className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
