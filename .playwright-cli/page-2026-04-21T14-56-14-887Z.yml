@@ -1,0 +1,137 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "WC Tickets 2026" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e13]: WC Tickets 2026
+      - navigation [ref=e14]:
+        - link "Home" [ref=e15] [cursor=pointer]:
+          - /url: /
+        - link "Browse Tickets" [ref=e16] [cursor=pointer]:
+          - /url: /browse
+        - link "Sell Tickets" [ref=e17] [cursor=pointer]:
+          - /url: /create
+      - button "Sign In" [ref=e19]
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: ⚽
+          - generic [ref=e25]: ��
+        - generic [ref=e27]:
+          - img [ref=e29]
+          - heading "Find Your World Cup Seat" [level=1] [ref=e35]:
+            - text: Find Your
+            - text: World Cup Seat
+          - paragraph [ref=e36]: The trusted fan-to-fan marketplace for FIFA World Cup 2026 tickets. USA · Canada · Mexico · June 11 – July 19
+          - generic [ref=e37]:
+            - link "Browse Tickets" [ref=e38] [cursor=pointer]:
+              - /url: /browse
+              - button "Browse Tickets" [ref=e39]:
+                - text: Browse Tickets
+                - img
+            - link "Sell Tickets" [ref=e40] [cursor=pointer]:
+              - /url: /create
+              - button "Sell Tickets" [ref=e41]
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: "104"
+          - generic [ref=e47]: Total Matches
+        - generic [ref=e48]:
+          - generic [ref=e49]: "16"
+          - generic [ref=e50]: Venues
+        - generic [ref=e51]:
+          - generic [ref=e52]: "3"
+          - generic [ref=e53]: Host Countries
+      - generic [ref=e55]:
+        - heading "Browse by Stage" [level=2] [ref=e56]
+        - paragraph [ref=e57]: Find tickets for every round of the tournament
+        - generic [ref=e58]:
+          - link "⚽ Group Stage 72 matches" [ref=e59] [cursor=pointer]:
+            - /url: /browse?stage=GROUP
+            - generic [ref=e61]:
+              - generic [ref=e62]: ⚽
+              - paragraph [ref=e63]: Group Stage
+              - paragraph [ref=e64]: 72 matches
+          - link "⚽ Round of 32 16 matches" [ref=e65] [cursor=pointer]:
+            - /url: /browse?stage=R32
+            - generic [ref=e67]:
+              - generic [ref=e68]: ⚽
+              - paragraph [ref=e69]: Round of 32
+              - paragraph [ref=e70]: 16 matches
+          - link "⚽ Round of 16 8 matches" [ref=e71] [cursor=pointer]:
+            - /url: /browse?stage=R16
+            - generic [ref=e73]:
+              - generic [ref=e74]: ⚽
+              - paragraph [ref=e75]: Round of 16
+              - paragraph [ref=e76]: 8 matches
+          - link "⚽ Quarter-Finals 4 matches" [ref=e77] [cursor=pointer]:
+            - /url: /browse?stage=QF
+            - generic [ref=e79]:
+              - generic [ref=e80]: ⚽
+              - paragraph [ref=e81]: Quarter-Finals
+              - paragraph [ref=e82]: 4 matches
+          - link "⚽ Semi-Finals 2 matches" [ref=e83] [cursor=pointer]:
+            - /url: /browse?stage=SF
+            - generic [ref=e85]:
+              - generic [ref=e86]: ⚽
+              - paragraph [ref=e87]: Semi-Finals
+              - paragraph [ref=e88]: 2 matches
+          - link "⚽ The Final 1 match" [ref=e89] [cursor=pointer]:
+            - /url: /browse?stage=FINAL
+            - generic [ref=e91]:
+              - generic [ref=e92]: ⚽
+              - paragraph [ref=e93]: The Final
+              - paragraph [ref=e94]: 1 match
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - heading "Latest Listings" [level=2] [ref=e99]
+          - paragraph [ref=e100]: Fresh tickets just posted by fans
+        - link "View All" [ref=e101] [cursor=pointer]:
+          - /url: /browse
+          - button "View All" [ref=e102]
+      - generic [ref=e141]:
+        - heading "How It Works" [level=2] [ref=e142]
+        - paragraph [ref=e143]: Three simple steps to secure your World Cup experience
+        - generic [ref=e144]:
+          - generic [ref=e147]:
+            - img [ref=e149]
+            - heading "Search" [level=3] [ref=e152]
+            - paragraph [ref=e153]: Browse thousands of listings for all 104 World Cup matches across 16 venues in 3 countries.
+          - generic [ref=e156]:
+            - img [ref=e158]
+            - heading "Offer" [level=3] [ref=e163]
+            - paragraph [ref=e164]: Make a secure offer to the seller. Negotiate price and terms directly through the platform.
+          - generic [ref=e167]:
+            - img [ref=e169]
+            - heading "Escrow" [level=3] [ref=e171]
+            - paragraph [ref=e172]: Our escrow system ensures safe transfer. Funds only release when both parties confirm.
+      - generic [ref=e174]:
+        - img [ref=e175]
+        - heading "100% Escrow Protected" [level=2] [ref=e177]
+        - paragraph [ref=e178]: Every transaction on WC Tickets 2026 is protected by our escrow system. Your money is held safely until both buyer and seller confirm the ticket transfer. We take disputes seriously and resolve every issue fairly.
+  - contentinfo [ref=e179]:
+    - generic [ref=e180]:
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - generic [ref=e183]:
+            - img [ref=e184]
+            - generic [ref=e190]: WC Tickets 2026
+          - paragraph [ref=e191]: The trusted peer-to-peer marketplace for FIFA World Cup 2026 tickets. Safe, secure, and fan-to-fan.
+        - generic [ref=e192]:
+          - heading "Marketplace" [level=3] [ref=e193]
+          - generic [ref=e194]:
+            - link "Browse Tickets" [ref=e195] [cursor=pointer]:
+              - /url: /browse
+            - link "Sell Tickets" [ref=e196] [cursor=pointer]:
+              - /url: /sell
+            - link "My Account" [ref=e197] [cursor=pointer]:
+              - /url: /profile
+        - generic [ref=e198]:
+          - heading "Tournament" [level=3] [ref=e199]
+          - generic [ref=e200]:
+            - generic [ref=e201]: June 11 – July 19, 2026
+            - generic [ref=e202]: USA · Canada · Mexico
+            - generic [ref=e203]: 104 Matches · 16 Venues
+      - generic [ref=e204]: © 2026 WC Tickets. Fan-to-fan resale marketplace. Not affiliated with FIFA.

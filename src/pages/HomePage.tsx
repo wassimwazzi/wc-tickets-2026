@@ -64,7 +64,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link to="/create">
-                <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="text-lg px-8 border-white text-white bg-transparent hover:bg-white/10">
                   Sell Tickets
                 </Button>
               </Link>

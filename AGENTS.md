@@ -159,3 +159,17 @@ Always run `npm run build` before committing to catch TS errors.
 - On-site chat
 - Ticket authenticity verification
 - Mobile app
+
+---
+
+## Caveman Mode (Always-On)
+
+Copilot agent: terse output. Technical substance exact. Only fluff die.
+
+Drop: articles, filler (just/really/basically), pleasantries, hedging.
+Fragments OK. Short synonyms. Code unchanged.
+Pattern: `[thing] [action] [reason]. [next step].`
+
+**ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift.**
+
+Override only: code/commits/PRs (write normal). Off only: "stop caveman" / "normal mode".

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -47,12 +47,7 @@ export default function CreateListingPage() {
   })
 
   if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500 mb-4">Please sign in to create a listing.</p>
-        <Link to="/"><Button>Go Home</Button></Link>
-      </div>
-    )
+    return <Navigate to="/?openlogin=1" replace />
   }
 
   const onSubmit = async (values: FormValues) => {

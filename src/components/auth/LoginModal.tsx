@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/useAuth'
+import { Input } from '@/components/ui/input'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase'
+import { toast } from '@/components/ui/toaster'
 
 interface LoginModalProps {
   open: boolean
@@ -9,6 +13,24 @@ interface LoginModalProps {
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { signInWithGoogle, signInWithFacebook } = useAuth()
+  const [email, setEmail] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [sending, setSending] = useState(false)
+
+  const handleMagicLink = async () => {
+    if (!email) return
+    setSending(true)
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    })
+    setSending(false)
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' })
+    } else {
+      setEmailSent(true)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -20,6 +42,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 pt-4">
+          {/* OAuth buttons */}
           <Button
             onClick={() => { signInWithGoogle(); onOpenChange(false) }}
             variant="outline"
@@ -42,6 +65,36 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             </svg>
             Continue with Facebook
           </Button>
+
+          <div className="relative my-1">
+            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-400">or sign in with email</span>
+            </div>
+          </div>
+
+          {/* Email magic link */}
+          {emailSent ? (
+            <div className="text-center py-4">
+              <p className="text-green-600 font-medium">✓ Magic link sent!</p>
+              <p className="text-sm text-slate-500 mt-1">Check your inbox (or <a href="http://localhost:54324" target="_blank" rel="noreferrer" className="underline text-wc-blue">Mailpit</a> for local dev).</p>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleMagicLink()}
+                className="flex-1"
+              />
+              <Button onClick={handleMagicLink} disabled={!email || sending} style={{ backgroundColor: '#E30613', color: 'white' }}>
+                {sending ? '...' : 'Send'}
+              </Button>
+            </div>
+          )}
+
           <p className="text-xs text-slate-400 text-center mt-2">
             By signing in you agree to our Terms of Service.
           </p>

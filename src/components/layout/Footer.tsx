@@ -21,7 +21,7 @@ export default function Footer() {
             <h3 className="font-semibold mb-3 text-yellow-400">Marketplace</h3>
             <div className="flex flex-col gap-2 text-sm text-gray-400">
               <Link to="/browse" className="hover:text-white transition-colors">Browse Tickets</Link>
-              <Link to="/sell" className="hover:text-white transition-colors">Sell Tickets</Link>
+              <Link to="/create" className="hover:text-white transition-colors">Sell Tickets</Link>
               <Link to="/profile" className="hover:text-white transition-colors">My Account</Link>
             </div>
           </div>
