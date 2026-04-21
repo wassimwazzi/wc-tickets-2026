@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 
 /**
- * Returns the count of pending offers on the user's listings.
- * Subscribes to Supabase Realtime so the badge stays live.
+ * Returns total notification count for the nav bell:
+ * - Seller: pending offers on their listings
+ * - Buyer: countered offers (seller sent a counter) that haven't been actioned
  */
 export function usePendingOffersCount(userId?: string) {
   const [count, setCount] = useState(0)
@@ -13,21 +14,31 @@ export function usePendingOffersCount(userId?: string) {
     if (!userId) { setCount(0); return }
 
     const fetchCount = async () => {
-      // Always refresh listing IDs so newly created listings are picked up
+      // Seller side: pending offers on their listings
       const { data } = await supabase
         .from('listings')
         .select('id')
         .eq('seller_id', userId)
       listingIdsRef.current = (data ?? []).map(l => l.id)
 
-      if (listingIdsRef.current.length === 0) { setCount(0); return }
+      let sellerCount = 0
+      if (listingIdsRef.current.length > 0) {
+        const { count: c } = await supabase
+          .from('offers')
+          .select('*', { count: 'exact', head: true })
+          .in('listing_id', listingIdsRef.current)
+          .eq('status', 'pending')
+        sellerCount = c ?? 0
+      }
 
-      const { count: c } = await supabase
+      // Buyer side: their offers that have been countered (need buyer action)
+      const { count: buyerCount } = await supabase
         .from('offers')
         .select('*', { count: 'exact', head: true })
-        .in('listing_id', listingIdsRef.current)
-        .eq('status', 'pending')
-      setCount(c ?? 0)
+        .eq('buyer_id', userId)
+        .eq('status', 'countered')
+
+      setCount(sellerCount + (buyerCount ?? 0))
     }
 
     fetchCount()

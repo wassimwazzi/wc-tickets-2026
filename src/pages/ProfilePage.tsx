@@ -10,7 +10,7 @@ import EscrowTracker from '@/components/offers/EscrowTracker'
 import { OfferCard } from '@/components/offers/OfferCard'
 import { useAuth } from '@/contexts/AuthContext'
 import { useListings, useDeleteListing } from '@/hooks/useListings'
-import { useMyOffers, useUpdateOffer } from '@/hooks/useOffers'
+import { useMyOffers, useUpdateOffer, useCounterOffer } from '@/hooks/useOffers'
 import { formatPrice, formatDate } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { useQuery } from '@tanstack/react-query'
@@ -34,6 +34,7 @@ export default function ProfilePage() {
   const { data: myOffers = [] } = useMyOffers(user?.id)
   const deleteListing = useDeleteListing()
   const updateOffer = useUpdateOffer()
+  const counterOffer = useCounterOffer()
 
   // Offers received on user's listings (as a seller)
   const { data: offersReceived = [] } = useQuery({
@@ -184,7 +185,7 @@ export default function ProfilePage() {
                   key={offer.id}
                   offer={offer}
                   role="seller"
-                  isPending={updateOffer.isPending}
+                  isPending={updateOffer.isPending || counterOffer.isPending}
                   onAccept={() =>
                     updateOffer.mutate(
                       { id: offer.id, status: 'accepted' },
@@ -195,6 +196,12 @@ export default function ProfilePage() {
                     updateOffer.mutate(
                       { id: offer.id, status: 'declined' },
                       { onSuccess: () => toast({ title: 'Offer declined' }) }
+                    )
+                  }
+                  onCounter={(amount, message) =>
+                    counterOffer.mutate(
+                      { id: offer.id, counteroffer_amount: amount, counteroffer_message: message },
+                      { onSuccess: () => toast({ title: 'Counter offer sent!' }) }
                     )
                   }
                 />
@@ -219,6 +226,18 @@ export default function ProfilePage() {
                     updateOffer.mutate(
                       { id: offer.id, status: 'withdrawn' },
                       { onSuccess: () => toast({ title: 'Offer withdrawn' }) }
+                    )
+                  }
+                  onAccept={() =>
+                    updateOffer.mutate(
+                      { id: offer.id, status: 'accepted' },
+                      { onSuccess: () => toast({ title: 'Counter offer accepted! 🎉' }) }
+                    )
+                  }
+                  onDecline={() =>
+                    updateOffer.mutate(
+                      { id: offer.id, status: 'declined' },
+                      { onSuccess: () => toast({ title: 'Counter offer declined' }) }
                     )
                   }
                 />

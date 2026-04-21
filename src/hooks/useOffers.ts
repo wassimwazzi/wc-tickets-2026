@@ -78,3 +78,32 @@ export function useUpdateOffer() {
     },
   })
 }
+
+export function useCounterOffer() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      id,
+      counteroffer_amount,
+      counteroffer_message,
+    }: {
+      id: string
+      counteroffer_amount: number
+      counteroffer_message?: string
+    }) => {
+      const { data, error } = await supabase
+        .from('offers')
+        .update({ status: 'countered', counteroffer_amount, counteroffer_message: counteroffer_message ?? null } as never)
+        .eq('id', id)
+        .select()
+        .single()
+      if (error) throw error
+      return data as Database['public']['Tables']['offers']['Row']
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['offers'] })
+      queryClient.invalidateQueries({ queryKey: ['offers-received'] })
+      queryClient.invalidateQueries({ queryKey: ['my-offers'] })
+    },
+  })
+}

@@ -7,6 +7,7 @@
     - [x] Seller can choose how many tickets can be sold (for example don't leave me with 1 ticket if I have 4 to sell)
     - [x] Don't allow buyer to submit multiple offers on the same listing unless they withdraw the previous one
     - [x] Once offer is accepted, deduct the sold quantity from the listing and update status to pending if there are still tickets available, or sold if all tickets are sold, and remove it from the browse page
+    - [ ] Add option for seller to make a counteroffer to the buyer's offer
 - [x] Use 21st.dev to redesign the browse page and listing detail page
 - [x] Browse tickets button is bigger than sell tickets button on home page, should be equal size
 - [x] Redesign UI

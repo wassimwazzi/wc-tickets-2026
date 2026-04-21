@@ -151,6 +151,9 @@ export interface Database {
           quantity: number
           status: string | null
           message: string | null
+          counteroffer_amount: number | null
+          counteroffer_message: string | null
+          buyer_read_at: string | null
           created_at: string | null
           updated_at: string | null
         }
@@ -163,6 +166,9 @@ export interface Database {
           quantity?: number
           status?: string | null
           message?: string | null
+          counteroffer_amount?: number | null
+          counteroffer_message?: string | null
+          buyer_read_at?: string | null
           created_at?: string | null
           updated_at?: string | null
         }
@@ -175,6 +181,9 @@ export interface Database {
           quantity?: number
           status?: string | null
           message?: string | null
+          counteroffer_amount?: number | null
+          counteroffer_message?: string | null
+          buyer_read_at?: string | null
           created_at?: string | null
           updated_at?: string | null
         }
