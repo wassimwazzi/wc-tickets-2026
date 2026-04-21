@@ -1,0 +1,160 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "WC Tickets 2026" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e13]: WC Tickets 2026
+      - navigation [ref=e14]:
+        - link "Home" [ref=e15] [cursor=pointer]:
+          - /url: /
+        - link "Browse Tickets" [ref=e16] [cursor=pointer]:
+          - /url: /browse
+        - link "Sell Tickets" [ref=e17] [cursor=pointer]:
+          - /url: /sell
+      - generic [ref=e19]:
+        - link "T" [ref=e20] [cursor=pointer]:
+          - /url: /profile
+          - generic [ref=e22]: T
+        - link "Profile" [ref=e23] [cursor=pointer]:
+          - /url: /profile
+          - img [ref=e24]
+          - text: Profile
+        - button "Sign Out" [ref=e27]:
+          - img [ref=e28]
+          - text: Sign Out
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - heading "Browse Tickets" [level=1] [ref=e33]
+      - paragraph [ref=e34]: Find the perfect seat for your World Cup experience
+      - generic [ref=e35]:
+        - complementary [ref=e36]:
+          - generic [ref=e37]:
+            - heading "Filters" [level=2] [ref=e38]
+            - generic [ref=e39]:
+              - generic [ref=e40]:
+                - generic [ref=e41]: Stage
+                - combobox [ref=e42]:
+                  - generic [ref=e43]: _all
+                  - img: ▼
+                - textbox [ref=e44]: _all
+              - generic [ref=e45]:
+                - generic [ref=e46]: Category
+                - combobox [ref=e47]:
+                  - generic [ref=e48]: _all
+                  - img: ▼
+                - textbox [ref=e49]: _all
+              - generic [ref=e50]:
+                - generic [ref=e51]: Price Range
+                - generic [ref=e52]:
+                  - spinbutton [ref=e53]
+                  - spinbutton [ref=e54]
+              - generic [ref=e55]:
+                - generic [ref=e56]: Currency
+                - combobox [ref=e57]:
+                  - generic [ref=e58]: _all
+                  - img: ▼
+                - textbox [ref=e59]: _all
+              - button "Clear Filters" [ref=e60]:
+                - img [ref=e61]
+                - text: Clear Filters
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - paragraph [ref=e66]: 2 listings found
+            - combobox [ref=e67]:
+              - generic [ref=e68]: newest
+              - img: ▼
+            - textbox [ref=e69]: newest
+          - generic [ref=e70]:
+            - link "🇧🇷 Brazil vs Colombia 🇨🇴 available Los Angeles 6/13/2026 Cat 1 – Premium Section 101 Row a Seat 13 Price on Request U Anonymous 0.0" [ref=e72] [cursor=pointer]:
+              - /url: /listings/7ac609a9-9ee3-48e3-b34e-d86a9ce043d4
+              - generic [ref=e73]:
+                - generic [ref=e74]:
+                  - generic [ref=e75]:
+                    - generic [ref=e76]:
+                      - generic [ref=e77]: 🇧🇷
+                      - generic [ref=e78]: Brazil
+                      - generic [ref=e79]: vs
+                      - generic [ref=e80]: Colombia
+                      - generic [ref=e81]: 🇨🇴
+                    - generic [ref=e82]: available
+                  - generic [ref=e83]:
+                    - generic [ref=e84]:
+                      - img [ref=e85]
+                      - text: Los Angeles
+                    - generic [ref=e88]:
+                      - img [ref=e89]
+                      - text: 6/13/2026
+                - generic [ref=e91]:
+                  - generic [ref=e93]: Cat 1 – Premium
+                  - generic [ref=e94]:
+                    - generic [ref=e95]:
+                      - img [ref=e96]
+                      - text: Section 101
+                    - generic [ref=e99]: Row a
+                    - generic [ref=e100]: Seat 13
+                  - generic [ref=e101]: Price on Request
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: U
+                    - generic [ref=e104]: Anonymous
+                    - generic [ref=e105]:
+                      - img [ref=e106]
+                      - text: "0.0"
+            - link "🇦🇷 Argentina vs Canada 🇨🇦 available New York 6/12/2026 Cat 1 – Premium Section 101 Row a Seat 12 $1.00 U Anonymous 0.0" [ref=e109] [cursor=pointer]:
+              - /url: /listings/16a0ea7d-c033-4cec-81a5-26216d1320d6
+              - generic [ref=e110]:
+                - generic [ref=e111]:
+                  - generic [ref=e112]:
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: 🇦🇷
+                      - generic [ref=e115]: Argentina
+                      - generic [ref=e116]: vs
+                      - generic [ref=e117]: Canada
+                      - generic [ref=e118]: 🇨🇦
+                    - generic [ref=e119]: available
+                  - generic [ref=e120]:
+                    - generic [ref=e121]:
+                      - img [ref=e122]
+                      - text: New York
+                    - generic [ref=e125]:
+                      - img [ref=e126]
+                      - text: 6/12/2026
+                - generic [ref=e128]:
+                  - generic [ref=e130]: Cat 1 – Premium
+                  - generic [ref=e131]:
+                    - generic [ref=e132]:
+                      - img [ref=e133]
+                      - text: Section 101
+                    - generic [ref=e136]: Row a
+                    - generic [ref=e137]: Seat 12
+                  - generic [ref=e138]: $1.00
+                  - generic [ref=e139]:
+                    - generic [ref=e140]: U
+                    - generic [ref=e141]: Anonymous
+                    - generic [ref=e142]:
+                      - img [ref=e143]
+                      - text: "0.0"
+  - contentinfo [ref=e145]:
+    - generic [ref=e146]:
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - img [ref=e150]
+            - generic [ref=e156]: WC Tickets 2026
+          - paragraph [ref=e157]: The trusted peer-to-peer marketplace for FIFA World Cup 2026 tickets. Safe, secure, and fan-to-fan.
+        - generic [ref=e158]:
+          - heading "Marketplace" [level=3] [ref=e159]
+          - generic [ref=e160]:
+            - link "Browse Tickets" [ref=e161] [cursor=pointer]:
+              - /url: /browse
+            - link "Sell Tickets" [ref=e162] [cursor=pointer]:
+              - /url: /sell
+            - link "My Account" [ref=e163] [cursor=pointer]:
+              - /url: /profile
+        - generic [ref=e164]:
+          - heading "Tournament" [level=3] [ref=e165]
+          - generic [ref=e166]:
+            - generic [ref=e167]: June 11 – July 19, 2026
+            - generic [ref=e168]: USA · Canada · Mexico
+            - generic [ref=e169]: 104 Matches · 16 Venues
+      - generic [ref=e170]: © 2026 WC Tickets. Fan-to-fan resale marketplace. Not affiliated with FIFA.
