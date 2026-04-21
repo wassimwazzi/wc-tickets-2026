@@ -81,10 +81,10 @@ describe('ListingDetailPage', () => {
     expect(screen.getByText('Known Seller')).toBeInTheDocument()
     expect(screen.queryByText('Anonymous')).not.toBeInTheDocument()
 
-    const messageLink = screen.getByRole('link', { name: /contact seller via email/i })
+    const messageLink = screen.getByRole('link', { name: /message seller/i })
     expect(messageLink).toHaveAttribute('href', 'mailto:seller@example.com')
 
-    await user.click(screen.getByRole('button', { name: /make offer/i }))
+    await user.click(screen.getByRole('button', { name: /make an offer/i }))
     expect(screen.getByText('Offer modal opened')).toBeInTheDocument()
   })
 })

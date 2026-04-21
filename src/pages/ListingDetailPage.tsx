@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Star, MapPin, Calendar, Phone, Mail, ExternalLink, Tag, Users, ArrowLeft } from 'lucide-react'
+import { Star, MapPin, Calendar, Phone, Mail, ExternalLink, Tag, Users, ArrowLeft, Check, MapPinIcon } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -68,200 +69,225 @@ export default function ListingDetailPage() {
   const contactLink = getContactLink()
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link to="/browse" className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 mb-6">
-        <ArrowLeft className="w-4 h-4" /> Back to Browse
-      </Link>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <div className="container mx-auto px-4 py-6">
+        <Link to="/browse" className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 mb-8 group transition-colors">
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> 
+          Back to Browse
+        </Link>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left - Main info */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Match card */}
-          {match && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Match Details</CardTitle>
-              </CardHeader>
-              <CardContent>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left - Main info */}
+          <motion.div className="lg:col-span-2 space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            {/* Match card - Hero style */}
+            {match && (
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
                 <MatchBadge match={match} />
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            )}
 
-          {/* Ticket details */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Ticket Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap gap-3">
-                <span className={cn('text-sm px-3 py-1 rounded border font-medium', CATEGORY_COLORS[listing.category])}>
-                  {CATEGORY_LABELS[listing.category]}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div>
-                  <p className="text-gray-500 flex items-center gap-1"><Tag className="w-3.5 h-3.5" /> Section</p>
-                  <p className="font-semibold mt-0.5">{listing.section}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Row</p>
-                  <p className="font-semibold mt-0.5">{listing.row_label}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Seat</p>
-                  <p className="font-semibold mt-0.5">{listing.seat_number}</p>
-                </div>
-              </div>
-              {listing.quantity && listing.quantity > 1 && (
-                <div className="text-sm flex items-center gap-2 text-gray-600">
-                  <Users className="w-4 h-4" />
-                  {listing.quantity} tickets available
-                </div>
-              )}
-              {listing.notes && (
-                <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700">
-                  <p className="font-medium mb-1">Notes from seller:</p>
-                  <p>{listing.notes}</p>
-                </div>
-              )}
-              <div className="text-xs text-gray-400">
-                Listed {listing.created_at ? formatDate(listing.created_at) : ''}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Seller offers view */}
-          {isSeller && offers.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Offers Received ({offers.length})</CardTitle>
+            {/* Ticket details */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="border-b border-gray-100">
+                <CardTitle className="text-lg text-slate-900">Ticket Details</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {offers.map((offer: typeof offers[0]) => (
-                  <div key={offer.id} className="border rounded-lg p-3 flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold">{formatPrice(offer.amount, offer.currency)}</p>
-                      {offer.message && <p className="text-sm text-gray-600 mt-0.5">{offer.message}</p>}
-                      <p className="text-xs text-gray-400 mt-1">
-                        Status: <span className="font-medium">{offer.status}</span>
-                      </p>
-                    </div>
-                    {offer.status === 'pending' && (
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
-                          style={{ backgroundColor: '#16a34a', color: 'white' }}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 border-red-300"
-                          onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
-                        >
-                          Decline
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* Right - Price & actions */}
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="pt-6 space-y-4">
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Asking Price</p>
-                <p className="text-4xl font-bold" style={{ color: '#E30613' }}>
-                  {formatPrice(listing.price, listing.currency ?? 'USD')}
-                </p>
-              </div>
-
-              {!isSeller && isAuthenticated && listing.status === 'available' && (
-                <Button
-                  className="w-full text-base"
-                  style={{ backgroundColor: '#E30613', color: 'white' }}
-                  onClick={() => setOfferOpen(true)}
-                >
-                  Make Offer
-                </Button>
-              )}
-
-              {!isAuthenticated && (
-                <div className="text-center text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
-                  <Link to="/" className="text-blue-600 hover:underline font-medium">Sign in</Link> to make an offer
+              <CardContent className="space-y-6 pt-6">
+                <div className="flex flex-wrap gap-2">
+                  <span className={cn('text-xs font-bold px-3 py-2 rounded-full border', CATEGORY_COLORS[listing.category])}>
+                    {CATEGORY_LABELS[listing.category]}
+                  </span>
+                  {listing.quantity && listing.quantity > 1 && (
+                    <span className="text-xs font-bold px-3 py-2 rounded-full bg-green-100 border border-green-300 text-green-700 flex items-center gap-1">
+                      <Users className="w-3 h-3" /> {listing.quantity} tickets
+                    </span>
+                  )}
                 </div>
-              )}
 
-              {seller?.contact_info && contactLink && !isSeller && (
-                <a href={contactLink} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Contact Seller via {seller.contact_preference}
-                  </Button>
-                </a>
-              )}
-
-              {isSeller && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                  This is your listing. View offers above.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Seller info */}
-          {seller && (
-            <Card>
-              <CardContent className="pt-4">
-                <h3 className="font-semibold mb-3 text-sm text-gray-500">SELLER</h3>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
-                    {seller.full_name?.[0]?.toUpperCase() ?? 'U'}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-slate-50 rounded-lg">
+                    <p className="text-xs font-medium text-slate-600 mb-2">SECTION</p>
+                    <p className="text-2xl font-bold text-slate-900">{listing.section}</p>
                   </div>
-                  <div>
-                    <p className="font-semibold">{seller.full_name ?? 'Anonymous'}</p>
-                    {seller.created_at && (
-                      <p className="text-xs text-gray-500">Member since {new Date(seller.created_at).getFullYear()}</p>
-                    )}
+                  <div className="text-center p-4 bg-slate-50 rounded-lg">
+                    <p className="text-xs font-medium text-slate-600 mb-2">ROW</p>
+                    <p className="text-2xl font-bold text-slate-900">{listing.row_label}</p>
+                  </div>
+                  <div className="text-center p-4 bg-slate-50 rounded-lg">
+                    <p className="text-xs font-medium text-slate-600 mb-2">SEAT</p>
+                    <p className="text-2xl font-bold text-slate-900">{listing.seat_number}</p>
                   </div>
                 </div>
-                {seller.reputation_score !== null && (
-                  <div className="flex items-center gap-1 text-sm">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${i < Math.round(Number(seller.reputation_score)) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                      />
-                    ))}
-                    <span className="ml-1 font-medium">{Number(seller.reputation_score).toFixed(1)}</span>
-                    {seller.total_reviews ? <span className="text-gray-500">({seller.total_reviews} reviews)</span> : null}
+
+                {listing.notes && (
+                  <div className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4">
+                    <p className="font-semibold text-sm text-amber-900 mb-1">📝 Seller's Notes</p>
+                    <p className="text-sm text-amber-800">{listing.notes}</p>
                   </div>
                 )}
-                <div className="mt-3 text-xs text-gray-500 flex items-center gap-1">
-                  {seller.contact_preference === 'email' ? <Mail className="w-3.5 h-3.5" /> : <Phone className="w-3.5 h-3.5" />}
-                  Prefers contact via {seller.contact_preference ?? 'message'}
+
+                <div className="text-xs text-slate-500 pt-2 border-t border-slate-100">
+                  Listed {listing.created_at ? formatDate(listing.created_at) : 'recently'}
                 </div>
               </CardContent>
             </Card>
-          )}
+
+            {/* Seller offers view */}
+            {isSeller && offers.length > 0 && (
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-white">
+                <CardHeader className="border-b border-green-100">
+                  <CardTitle className="text-lg text-green-900">
+                    Offers Received ({offers.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-6">
+                  {offers.map((offer: typeof offers[0]) => (
+                    <motion.div 
+                      key={offer.id} 
+                      className="border-2 border-green-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+                      whileHover={{ scale: 1.01 }}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <p className="text-xl font-bold text-green-600">{formatPrice(offer.amount, offer.currency)}</p>
+                          {offer.message && <p className="text-sm text-slate-600 mt-1">{offer.message}</p>}
+                          <p className="text-xs text-slate-500 mt-2 font-medium">
+                            Status: <span className={cn('px-2 py-0.5 rounded-full text-xs font-bold', 
+                              offer.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                              offer.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                              'bg-red-100 text-red-800'
+                            )}>
+                              {offer.status.charAt(0).toUpperCase() + offer.status.slice(1)}
+                            </span>
+                          </p>
+                        </div>
+                        {offer.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              className="text-xs font-bold"
+                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
+                              style={{ backgroundColor: '#16a34a', color: 'white' }}
+                            >
+                              <Check className="w-3 h-3 mr-1" /> Accept
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-xs font-bold text-red-600 border-red-300 hover:bg-red-50"
+                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
+                            >
+                              Decline
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
+
+          {/* Right - Price & actions */}
+          <motion.div className="space-y-4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.1 }}>
+            {/* Price card - Hero */}
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-50 to-orange-100">
+              <CardContent className="pt-6 space-y-4">
+                <div>
+                  <p className="text-xs font-bold text-orange-600 mb-2">ASKING PRICE</p>
+                  <p className="text-5xl font-black text-orange-600">
+                    {formatPrice(listing.price, listing.currency ?? 'USD')}
+                  </p>
+                </div>
+
+                {!isSeller && isAuthenticated && listing.status === 'available' && (
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      className="w-full text-base font-bold h-12"
+                      style={{ backgroundColor: '#F97316', color: 'white' }}
+                      onClick={() => setOfferOpen(true)}
+                    >
+                      💰 Make an Offer
+                    </Button>
+                  </motion.div>
+                )}
+
+                {!isAuthenticated && (
+                  <div className="text-center text-sm bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
+                    <Link to="/" className="text-blue-600 hover:text-blue-700 font-bold">Sign in</Link> to make an offer
+                  </div>
+                )}
+
+                {isSeller && (
+                  <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 text-sm text-blue-800 font-medium">
+                    ✓ This is your listing
+                  </div>
+                )}
+
+                {listing.status !== 'available' && (
+                  <div className="bg-red-50 border-2 border-red-300 rounded-lg p-3 text-sm text-red-800 font-bold">
+                    ⓘ This listing is {listing.status}
+                  </div>
+                )}
+
+                {seller?.contact_info && contactLink && !isSeller && (
+                  <a href={contactLink} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="w-full font-bold border-2 hover:bg-slate-100">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Message Seller
+                    </Button>
+                  </a>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Seller info - Card */}
+            {seller && (
+              <Card className="border-0 shadow-sm">
+                <CardContent className="pt-6">
+                  <p className="text-xs font-bold text-slate-500 mb-4 tracking-wide">SELLER</p>
+                  
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                      {seller.full_name?.[0]?.toUpperCase() ?? 'U'}
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900">{seller.full_name ?? 'Anonymous'}</p>
+                      {seller.created_at && (
+                        <p className="text-xs text-slate-500">Member since {new Date(seller.created_at).getFullYear()}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {seller.reputation_score !== null && (
+                    <div className="flex items-center gap-1 mb-4 p-3 bg-yellow-50 rounded-lg">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${i < Math.round(Number(seller.reputation_score)) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                        />
+                      ))}
+                      <span className="ml-auto font-bold text-yellow-700">{Number(seller.reputation_score).toFixed(1)}</span>
+                      {seller.total_reviews && <span className="text-xs text-slate-600">({seller.total_reviews})</span>}
+                    </div>
+                  )}
+
+                  <div className="text-xs text-slate-600 flex items-center gap-2 pt-3 border-t border-slate-100">
+                    {seller.contact_preference === 'email' ? <Mail className="w-3.5 h-3.5 text-blue-500" /> : <Phone className="w-3.5 h-3.5 text-green-500" />}
+                    <span className="font-medium">Prefers {seller.contact_preference ?? 'message'}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
         </div>
       </div>
 
-      {listing && (
-        <OfferModal
-          listing={listing as Parameters<typeof OfferModal>[0]['listing']}
-          isOpen={offerOpen}
-          onClose={() => setOfferOpen(false)}
-        />
-      )}
+      {/* Offer modal */}
+      {isAuthenticated && listing && <OfferModal isOpen={offerOpen} onClose={() => setOfferOpen(false)} listing={listing} />}
     </div>
   )
 }
