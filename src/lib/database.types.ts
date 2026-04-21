@@ -96,6 +96,7 @@ export interface Database {
           row_label: string
           seat_number: string
           quantity: number
+          min_sell_quantity: number
           category: number
           price: number | null
           currency: string
@@ -112,6 +113,7 @@ export interface Database {
           row_label: string
           seat_number: string
           quantity?: number
+          min_sell_quantity?: number
           category: number
           price?: number | null
           currency?: string
@@ -128,6 +130,7 @@ export interface Database {
           row_label?: string
           seat_number?: string
           quantity?: number
+          min_sell_quantity?: number
           category?: number
           price?: number | null
           currency?: string
@@ -145,6 +148,7 @@ export interface Database {
           buyer_id: string
           amount: number
           currency: string
+          quantity: number
           status: string | null
           message: string | null
           created_at: string | null
@@ -156,6 +160,7 @@ export interface Database {
           buyer_id: string
           amount: number
           currency: string
+          quantity?: number
           status?: string | null
           message?: string | null
           created_at?: string | null
@@ -167,6 +172,7 @@ export interface Database {
           buyer_id?: string
           amount?: number
           currency?: string
+          quantity?: number
           status?: string | null
           message?: string | null
           created_at?: string | null

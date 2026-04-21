@@ -4,11 +4,20 @@ import OfferModal from '@/components/offers/OfferModal'
 import type { Database } from '@/lib/database.types'
 
 const mockMutateAsync = vi.fn()
+const mockWithdrawAsync = vi.fn()
+let mockMyOffersData: unknown[] = []
 
 vi.mock('@/hooks/useOffers', () => ({
   useCreateOffer: () => ({
     mutateAsync: mockMutateAsync,
     isPending: false,
+  }),
+  useUpdateOffer: () => ({
+    mutateAsync: mockWithdrawAsync,
+    isPending: false,
+  }),
+  useMyOffers: () => ({
+    data: mockMyOffersData,
   }),
 }))
 
@@ -42,6 +51,7 @@ const MOCK_LISTING = {
   row_label: 'A',
   seat_number: '9',
   quantity: 1,
+  min_sell_quantity: 1,
   price: 320,
   currency: 'USD',
   notes: null,
@@ -54,6 +64,9 @@ describe('OfferModal', () => {
   beforeEach(() => {
     mockMutateAsync.mockReset()
     mockMutateAsync.mockResolvedValue({})
+    mockWithdrawAsync.mockReset()
+    mockWithdrawAsync.mockResolvedValue({})
+    mockMyOffersData = []
   })
 
   it('submits offer with amount and message', async () => {
@@ -62,10 +75,13 @@ describe('OfferModal', () => {
 
     render(<OfferModal listing={MOCK_LISTING} isOpen={true} onClose={onClose} />)
 
-    fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '275' } })
+    // Amount field is the second spinbutton (first is quantity)
+    const spinbuttons = screen.getAllByRole('spinbutton')
+    const amountInput = spinbuttons.find(el => (el as HTMLInputElement).placeholder === '0.00')!
+    fireEvent.change(amountInput, { target: { value: '275' } })
     await user.type(screen.getByLabelText(/message/i), 'Best price?')
 
-    fireEvent.submit(screen.getByRole('spinbutton').closest('form')!)
+    fireEvent.submit(amountInput.closest('form')!)
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledWith(
@@ -87,7 +103,7 @@ describe('OfferModal', () => {
 
     render(<OfferModal listing={MOCK_LISTING} isOpen={true} onClose={vi.fn()} />)
 
-    // Click submit without filling in amount
+    // Click submit without filling in amount (quantity has a default, amount doesn't)
     await user.click(screen.getByRole('button', { name: /submit offer/i }))
 
     // Mutation should not be called when validation fails
@@ -102,6 +118,43 @@ describe('OfferModal', () => {
 
     await user.click(screen.getByRole('button', { name: /cancel/i }))
     expect(onClose).toHaveBeenCalled()
+  })
+
+  it('shows existing pending offer instead of form and allows withdrawal', async () => {
+    mockMyOffersData = [{
+      id: 'offer-1',
+      listing_id: 'listing-1',
+      buyer_id: 'buyer-1',
+      status: 'pending',
+      amount: 200,
+      currency: 'USD',
+      quantity: 1,
+      message: 'Is this still available?',
+    }]
+
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+
+    render(<OfferModal listing={MOCK_LISTING} isOpen={true} onClose={onClose} />)
+
+    // Should show pending offer summary, not the submission form
+    expect(screen.getByText(/you have a pending offer/i)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /submit offer/i })).not.toBeInTheDocument()
+
+    // Withdraw button visible and triggers mutation + close
+    await user.click(screen.getByRole('button', { name: /withdraw offer/i }))
+    await waitFor(() => {
+      expect(mockWithdrawAsync).toHaveBeenCalledWith({ id: 'offer-1', status: 'withdrawn' })
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
+  it('enforces min_sell_quantity in quantity field', () => {
+    const listingWithMin = { ...MOCK_LISTING, quantity: 4, min_sell_quantity: 2 }
+    render(<OfferModal listing={listingWithMin} isOpen={true} onClose={vi.fn()} />)
+
+    expect(screen.getByText(/min\. 2/i)).toBeInTheDocument()
+    expect(screen.getByText(/4 ticket\(s\) available/i)).toBeInTheDocument()
   })
 })
 

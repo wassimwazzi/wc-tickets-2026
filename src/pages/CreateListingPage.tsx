@@ -22,10 +22,14 @@ const schema = z.object({
   row_label: z.string().min(1, 'Row is required'),
   seat_number: z.string().min(1, 'Seat number is required'),
   quantity: z.number().int().min(1).max(10),
+  min_sell_quantity: z.number().int().min(1).max(10),
   category: z.number().int().min(1).max(4),
   price: z.number().positive({ message: 'Price must be positive' }).optional().nullable(),
   currency: z.enum(['USD', 'CAD', 'MXN']),
   notes: z.string().optional(),
+}).refine(d => d.min_sell_quantity <= d.quantity, {
+  message: 'Minimum must be ≤ total quantity',
+  path: ['min_sell_quantity'],
 })
 
 type FormValues = z.infer<typeof schema>
@@ -41,6 +45,7 @@ export default function CreateListingPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       quantity: 1,
+      min_sell_quantity: 1,
       category: 1,
       currency: 'USD',
     },
@@ -68,6 +73,7 @@ export default function CreateListingPage() {
         row_label: values.row_label,
         seat_number: values.seat_number,
         quantity: values.quantity,
+        min_sell_quantity: values.min_sell_quantity,
         category: values.category as 1 | 2 | 3 | 4,
         price: values.price ?? null,
         currency: values.currency,
@@ -139,20 +145,34 @@ export default function CreateListingPage() {
                 {errors.quantity && <p className="text-xs text-red-500">{errors.quantity.message}</p>}
               </div>
               <div className="space-y-1">
-                <Label>Category *</Label>
-                <Select value={String(category)} onValueChange={(v) => setValue('category', parseInt(v ?? '1'))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">Cat 1 - Premium</SelectItem>
-                    <SelectItem value="2">Cat 2 - Sideline</SelectItem>
-                    <SelectItem value="3">Cat 3 - Behind Goal</SelectItem>
-                    <SelectItem value="4">Cat 4 - Upper Tier</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.category && <p className="text-xs text-red-500">{errors.category.message}</p>}
+                <Label htmlFor="min_sell_quantity">
+                  Min. to sell *
+                  <span className="text-xs text-slate-400 font-normal ml-1">(won't sell fewer)</span>
+                </Label>
+                <Input
+                  id="min_sell_quantity"
+                  type="number"
+                  min={1}
+                  max={10}
+                  {...register('min_sell_quantity', { valueAsNumber: true })}
+                />
+                {errors.min_sell_quantity && <p className="text-xs text-red-500">{errors.min_sell_quantity.message}</p>}
               </div>
+            </div>
+            <div className="space-y-1">
+              <Label>Category *</Label>
+              <Select value={String(category)} onValueChange={(v) => setValue('category', parseInt(v ?? '1'))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Cat 1 - Premium</SelectItem>
+                  <SelectItem value="2">Cat 2 - Sideline</SelectItem>
+                  <SelectItem value="3">Cat 3 - Behind Goal</SelectItem>
+                  <SelectItem value="4">Cat 4 - Upper Tier</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.category && <p className="text-xs text-red-500">{errors.category.message}</p>}
             </div>
           </CardContent>
         </Card>

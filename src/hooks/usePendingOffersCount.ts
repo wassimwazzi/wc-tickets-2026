@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 
 /**
@@ -7,26 +7,25 @@ import { supabase } from '@/lib/supabase'
  */
 export function usePendingOffersCount(userId?: string) {
   const [count, setCount] = useState(0)
+  const listingIdsRef = useRef<string[]>([])
 
   useEffect(() => {
     if (!userId) { setCount(0); return }
 
-    let listingIds: string[] = []
-
     const fetchCount = async () => {
-      if (listingIds.length === 0) {
-        const { data } = await supabase
-          .from('listings')
-          .select('id')
-          .eq('seller_id', userId)
-        listingIds = (data ?? []).map(l => l.id)
-      }
-      if (listingIds.length === 0) { setCount(0); return }
+      // Always refresh listing IDs so newly created listings are picked up
+      const { data } = await supabase
+        .from('listings')
+        .select('id')
+        .eq('seller_id', userId)
+      listingIdsRef.current = (data ?? []).map(l => l.id)
+
+      if (listingIdsRef.current.length === 0) { setCount(0); return }
 
       const { count: c } = await supabase
         .from('offers')
         .select('*', { count: 'exact', head: true })
-        .in('listing_id', listingIds)
+        .in('listing_id', listingIdsRef.current)
         .eq('status', 'pending')
       setCount(c ?? 0)
     }

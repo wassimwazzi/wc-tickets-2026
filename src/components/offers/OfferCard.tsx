@@ -10,6 +10,7 @@ interface OfferCardProps {
     amount: number | null
     currency: string | null
     status: string
+    quantity?: number | null
     message?: string | null
     created_at?: string | null
     listing_id?: string | null
@@ -119,6 +120,9 @@ export function OfferCard({ offer, role, onAccept, onDecline, onWithdraw, isPend
               : <span className="text-slate-400 text-base">No price set</span>
             }
           </p>
+          {(offer.quantity ?? 1) > 1 && (
+            <p className="text-xs text-slate-400 mt-0.5">{offer.quantity} tickets</p>
+          )}
         </div>
 
         {/* Divider */}
