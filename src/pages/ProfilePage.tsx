@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Star, Pencil, Trash2 } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -25,6 +25,7 @@ type ReviewRow = Database['public']['Tables']['reviews']['Row'] & {
 export default function ProfilePage() {
   const { user, profile } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const { data: myListings = [], isLoading: listingsLoading } = useListings({
     sellerId: user?.id,
@@ -119,13 +120,13 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <Tabs defaultValue="listings">
-        <TabsList>
-          <TabsTrigger value="listings">My Listings ({myListings.length})</TabsTrigger>
-          <TabsTrigger value="offers-received">Offers Received ({offersReceived.length})</TabsTrigger>
-          <TabsTrigger value="offers-sent">Offers Sent ({myOffers.length})</TabsTrigger>
-          <TabsTrigger value="transactions">Transactions ({transactions.length})</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+      <Tabs defaultValue={searchParams.get('tab') ?? 'listings'}>
+        <TabsList className="flex flex-wrap gap-1 h-auto p-1">
+          <TabsTrigger value="listings" className="text-xs sm:text-sm px-3 py-1.5">My Listings ({myListings.length})</TabsTrigger>
+          <TabsTrigger value="offers-received" className="text-xs sm:text-sm px-3 py-1.5">Offers Received ({offersReceived.length})</TabsTrigger>
+          <TabsTrigger value="offers-sent" className="text-xs sm:text-sm px-3 py-1.5">Offers Sent ({myOffers.length})</TabsTrigger>
+          <TabsTrigger value="transactions" className="text-xs sm:text-sm px-3 py-1.5">Transactions ({transactions.length})</TabsTrigger>
+          <TabsTrigger value="reviews" className="text-xs sm:text-sm px-3 py-1.5">Reviews ({reviews.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="listings" className="mt-6">

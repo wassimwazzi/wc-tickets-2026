@@ -42,7 +42,7 @@ BEGIN
     UPDATE listings
     SET
       quantity   = _new_qty,
-      status     = CASE WHEN _new_qty <= 0 THEN 'sold' ELSE 'pending' END,
+      status     = CASE WHEN _new_qty <= 0 THEN 'sold' ELSE 'available' END,
       updated_at = NOW()
     WHERE id = NEW.listing_id;
 

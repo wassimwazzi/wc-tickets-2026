@@ -82,6 +82,7 @@ playwright-cli mousewheel 0 100
 ```
 
 ### Save as
+Always save artifacts to /tmp/playwright-cli/ by default, and allow custom filename with `--filename` option.
 
 ```bash
 playwright-cli screenshot

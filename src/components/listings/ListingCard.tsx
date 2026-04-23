@@ -33,10 +33,11 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 
   return (
     <motion.div
+      className="h-full"
       whileHover={{ y: -4, boxShadow: '0 20px 40px -8px rgba(0,0,0,0.12)' }}
       transition={{ duration: 0.2 }}
     >
-      <Link to={`/listings/${listing.id}`} className="block">
+      <Link to={`/listings/${listing.id}`} className="block h-full">
         <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-sm h-full flex flex-col">
           {/* Colored header band */}
           <div
@@ -116,11 +117,15 @@ export default function ListingCard({ listing }: { listing: Listing }) {
 
             {/* Price */}
             <div className="mt-auto pt-2 flex items-end justify-between border-t border-slate-100">
-              <div>
+              <div className="min-h-[3.5rem] flex flex-col justify-end">
                 <p className="text-xs text-slate-400 mb-0.5">Price per ticket</p>
-                <p className="text-2xl font-bold" style={{ color: '#0033A0', fontFamily: '"Noto Serif Display", Georgia, serif' }}>
-                  {formatPrice(listing.price, listing.currency ?? 'USD')}
-                </p>
+                {listing.price != null ? (
+                  <p className="text-2xl font-bold leading-tight" style={{ color: '#0033A0', fontFamily: '"Noto Serif Display", Georgia, serif' }}>
+                    {formatPrice(listing.price, listing.currency ?? 'USD')}
+                  </p>
+                ) : (
+                  <p className="text-sm font-semibold text-slate-500 italic">Price on Request</p>
+                )}
               </div>
 
               {/* Seller */}

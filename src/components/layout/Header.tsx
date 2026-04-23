@@ -13,7 +13,13 @@ export default function Header() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
-  const pendingOffers = usePendingOffersCount(user?.id)
+  const { count: pendingOffers, items: notifItems } = usePendingOffersCount(user?.id)
+
+  // If only 1 unique listing affected → go directly there, else profile
+  const uniqueListingIds = [...new Set(notifItems.map(i => i.listingId))]
+  const bellHref = uniqueListingIds.length === 1
+    ? `/listings/${uniqueListingIds[0]}`
+    : '/profile?tab=offers-received'
 
   useEffect(() => {
     if (searchParams.get('openlogin') === '1') {
@@ -64,7 +70,7 @@ export default function Header() {
             {user ? (
               <div className="flex items-center gap-2">
                 {pendingOffers > 0 && (
-                  <Link to="/profile" className="relative p-2 rounded-xl hover:bg-slate-50 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
+                  <Link to={bellHref} className="relative p-2 rounded-xl hover:bg-slate-50 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
                     <Bell className="w-5 h-5 text-slate-600" />
                     <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
                       {pendingOffers > 9 ? '9+' : pendingOffers}
@@ -103,7 +109,7 @@ export default function Header() {
           {/* Mobile: bell + menu */}
           <div className="md:hidden flex items-center gap-1">
             {user && pendingOffers > 0 && (
-              <Link to="/profile" className="relative p-2 rounded-xl hover:bg-slate-100 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
+              <Link to={bellHref} className="relative p-2 rounded-xl hover:bg-slate-100 transition-colors" aria-label={`${pendingOffers} pending offer${pendingOffers > 1 ? 's' : ''}`}>
                 <Bell className="w-5 h-5 text-slate-700" />
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
                   {pendingOffers > 9 ? '9+' : pendingOffers}

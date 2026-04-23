@@ -58,6 +58,7 @@ vi.mock('@/hooks/useOffers', () => ({
     ],
   }),
   useUpdateOffer: () => ({ mutate: mockUpdateOffer }),
+  useCounterOffer: () => ({ mutate: vi.fn() }),
 }))
 
 vi.mock('@/contexts/AuthContext', () => ({
@@ -108,7 +109,7 @@ describe('ListingDetailPage', () => {
     renderPage()
 
     expect(screen.getByText(/\$280/)).toBeInTheDocument()
-    expect(screen.getByText('Will you take less?')).toBeInTheDocument()
+    expect(screen.getByText(/Will you take less\?/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /accept/i }))
     expect(mockUpdateOffer).toHaveBeenCalledWith({ id: 'offer-1', status: 'accepted' })

@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import MatchBadge from '@/components/matches/MatchBadge'
 import OfferModal from '@/components/offers/OfferModal'
+import { OfferCard } from '@/components/offers/OfferCard'
 import { useListing } from '@/hooks/useListings'
-import { useOffers, useUpdateOffer } from '@/hooks/useOffers'
+import { useOffers, useUpdateOffer, useCounterOffer } from '@/hooks/useOffers'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatPrice, formatDate, CATEGORY_LABELS, CATEGORY_COLORS, cn } from '@/lib/utils'
 
@@ -19,6 +20,7 @@ export default function ListingDetailPage() {
   const [offerOpen, setOfferOpen] = useState(false)
   const { data: offers = [] } = useOffers(id)
   const updateOffer = useUpdateOffer()
+  const counterOffer = useCounterOffer()
 
   const isSeller = user?.id === listing?.seller_id
   const isAuthenticated = !!user
@@ -141,49 +143,17 @@ export default function ListingDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 pt-6">
                   {offers.map((offer: typeof offers[0]) => (
-                    <motion.div 
-                      key={offer.id} 
-                      className="border-2 border-green-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <p className="text-xl font-bold text-green-600">{formatPrice(offer.amount, offer.currency)}</p>
-                          {offer.message && <p className="text-sm text-slate-600 mt-1">{offer.message}</p>}
-                          <p className="text-xs text-slate-500 mt-2 font-medium">
-                            Status: <span className={cn('px-2 py-0.5 rounded-full text-xs font-bold', 
-                              offer.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              offer.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                              'bg-red-100 text-red-800'
-                            )}>
-                              {offer.status.charAt(0).toUpperCase() + offer.status.slice(1)}
-                            </span>
-                          </p>
-                        </div>
-                        {offer.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              className="text-xs font-bold"
-                              disabled={updateOffer.isPending}
-                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
-                              style={{ backgroundColor: '#16a34a', color: 'white' }}
-                            >
-                              <Check className="w-3 h-3 mr-1" /> {updateOffer.isPending ? '...' : 'Accept'}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={updateOffer.isPending}
-                              className="text-xs font-bold text-red-600 border-red-300 hover:bg-red-50"
-                              onClick={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
-                            >
-                              {updateOffer.isPending ? '...' : 'Decline'}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
+                    <OfferCard
+                      key={offer.id}
+                      offer={{ ...offer, listing: listing ? { id: listing.id, section: listing.section } : undefined }}
+                      role="seller"
+                      isPending={updateOffer.isPending || counterOffer.isPending}
+                      onAccept={() => updateOffer.mutate({ id: offer.id, status: 'accepted' })}
+                      onDecline={() => updateOffer.mutate({ id: offer.id, status: 'declined' })}
+                      onCounter={(amount, message) =>
+                        counterOffer.mutate({ id: offer.id, counteroffer_amount: amount, counteroffer_message: message })
+                      }
+                    />
                   ))}
                 </CardContent>
               </Card>
