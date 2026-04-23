@@ -7,6 +7,8 @@
     - [x] Seller can choose how many tickets can be sold (for example don't leave me with 1 ticket if I have 4 to sell)
     - [x] Don't allow buyer to submit multiple offers on the same listing unless they withdraw the previous one
     - [x] Once offer is accepted, deduct the sold quantity from the listing and update status to pending if there are still tickets available, or sold if all tickets are sold, and remove it from the browse page
+    - [ ] Show currency on price
+    - [ ] Remove cascade delete on listings. Listings should not be deletable, only updatable to "cancelled" status. This way we preserve offer and review history even if a listing is cancelled.
     - [ ] If user has no reviews, dont show as 0 stars — show "No reviews yet" or something instead
     - [ ] Add option for seller to make a counteroffer to the buyer's offer
     - [ ] Messaging flow: users must sign in with at least one contact method (WhatsApp, Facebook, or both)

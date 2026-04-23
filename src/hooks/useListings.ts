@@ -14,6 +14,8 @@ export interface ListingFilters {
   currency?: string
   status?: string
   sellerId?: string
+  /** When true, skip the default status='available' filter (used on profile page to show seller's own listings at all statuses) */
+  allStatuses?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +41,7 @@ export function useListings(filters?: ListingFilters) {
       if (filters?.maxPrice != null) query = query.lte('price', filters.maxPrice)
       if (filters?.currency) query = query.eq('currency', filters.currency)
       if (filters?.status !== undefined) query = query.eq('status', filters.status)
-      else query = query.eq('status', 'available')
+      else if (!filters?.allStatuses) query = query.eq('status', 'available')
       if (filters?.sellerId) query = query.eq('seller_id', filters.sellerId)
 
       const { data, error } = await query

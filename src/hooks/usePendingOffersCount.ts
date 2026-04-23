@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 export interface NotificationItem {
   offerId: string
   listingId: string
-  type: 'pending_offer' | 'countered'
+  type: 'pending_offer' | 'countered' | 'accepted' | 'declined'
 }
 
 interface PendingOffersResult {
@@ -45,14 +45,15 @@ export function usePendingOffersCount(userId?: string): PendingOffersResult {
         }
       }
 
-      // Buyer side: their countered offers
-      const { data: counteredOffers } = await supabase
+      // Buyer side: countered + accepted/declined unread
+      const { data: buyerOffers } = await supabase
         .from('offers')
-        .select('id, listing_id')
+        .select('id, listing_id, status')
         .eq('buyer_id', userId)
-        .eq('status', 'countered')
-      for (const o of counteredOffers ?? []) {
-        items.push({ offerId: o.id, listingId: o.listing_id, type: 'countered' })
+        .in('status', ['countered', 'accepted', 'declined'])
+        .is('buyer_read_at', null)
+      for (const o of buyerOffers ?? []) {
+        items.push({ offerId: o.id, listingId: o.listing_id, type: o.status as NotificationItem['type'] })
       }
 
       setResult({ count: items.length, items })

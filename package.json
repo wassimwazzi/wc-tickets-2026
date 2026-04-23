@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "test:run": "vitest run",
-    "seed:db": "npx supabase db reset",
+    "seed:db": "echo 'Run: docker exec supabase_db_wc-tickets-2026 psql -U postgres -d postgres -f supabase/seed.sql'",
     "preview": "vite preview"
   },
   "dependencies": {

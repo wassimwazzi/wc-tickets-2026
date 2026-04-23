@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Star, Pencil, Trash2 } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -10,7 +10,7 @@ import EscrowTracker from '@/components/offers/EscrowTracker'
 import { OfferCard } from '@/components/offers/OfferCard'
 import { useAuth } from '@/contexts/AuthContext'
 import { useListings, useDeleteListing } from '@/hooks/useListings'
-import { useMyOffers, useUpdateOffer, useCounterOffer } from '@/hooks/useOffers'
+import { useMyOffers, useUpdateOffer, useCounterOffer, useMarkOffersRead } from '@/hooks/useOffers'
 import { formatPrice, formatDate } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { useQuery } from '@tanstack/react-query'
@@ -29,6 +29,7 @@ export default function ProfilePage() {
 
   const { data: myListings = [], isLoading: listingsLoading } = useListings({
     sellerId: user?.id,
+    allStatuses: true,
     status: undefined,
   })
 
@@ -36,6 +37,17 @@ export default function ProfilePage() {
   const deleteListing = useDeleteListing()
   const updateOffer = useUpdateOffer()
   const counterOffer = useCounterOffer()
+  const markOffersRead = useMarkOffersRead()
+
+  const activeTab = searchParams.get('tab') ?? 'listings'
+
+  // Mark buyer offers as read when offers-sent tab is viewed
+  useEffect(() => {
+    if (activeTab === 'offers-sent' && user?.id) {
+      markOffersRead.mutate(user.id)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, user?.id])
 
   // Offers received on user's listings (as a seller)
   const { data: offersReceived = [] } = useQuery({
@@ -120,7 +132,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <Tabs defaultValue={searchParams.get('tab') ?? 'listings'}>
+      <Tabs defaultValue={activeTab}>
         <TabsList className="flex flex-wrap gap-1 h-auto p-1">
           <TabsTrigger value="listings" className="text-xs sm:text-sm px-3 py-1.5">My Listings ({myListings.length})</TabsTrigger>
           <TabsTrigger value="offers-received" className="text-xs sm:text-sm px-3 py-1.5">Offers Received ({offersReceived.length})</TabsTrigger>

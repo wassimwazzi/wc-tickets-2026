@@ -103,6 +103,7 @@ export default function CreateListingPage() {
           <CardContent>
             <MatchSearch
               onSelect={(match) => { setSelectedMatch(match); setMatchError('') }}
+              onClear={() => { setSelectedMatch(null); setMatchError('') }}
               selectedMatch={selectedMatch}
               placeholder="Search for a match..."
             />

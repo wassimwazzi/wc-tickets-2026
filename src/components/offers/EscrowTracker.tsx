@@ -39,17 +39,17 @@ export default function EscrowTracker({ transaction }: EscrowTrackerProps) {
   const isSeller = user?.id === transaction.seller_id
 
   const updateStatus = async (newStatus: string) => {
-    try {
-      await supabase
-        .from('escrow_transactions')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .update({ status: newStatus } as any)
-        .eq('id', transaction.id)
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      toast({ title: 'Status updated successfully' })
-    } catch {
+    const { error } = await supabase
+      .from('escrow_transactions')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update({ status: newStatus } as any)
+      .eq('id', transaction.id)
+    if (error) {
       toast({ title: 'Failed to update status', variant: 'destructive' })
+      return
     }
+    queryClient.invalidateQueries({ queryKey: ['transactions'] })
+    toast({ title: 'Status updated successfully' })
   }
 
   if (transaction.status === 'disputed') {

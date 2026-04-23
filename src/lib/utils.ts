@@ -78,7 +78,16 @@ export const CATEGORY_COLORS: Record<number, string> = {
 
 export const CONTACT_URLS: Record<string, (info: string) => string> = {
   whatsapp: (info) => `https://wa.me/${info.replace(/\D/g, '')}`,
-  facebook: (info) => info.startsWith('http') ? info : `https://facebook.com/${info}`,
+  facebook: (info) => {
+    if (info.startsWith('http')) {
+      try {
+        const url = new URL(info)
+        const allowed = ['facebook.com', 'www.facebook.com', 'fb.com', 'm.facebook.com', 'www.fb.com']
+        if (allowed.includes(url.hostname)) return info
+      } catch { /* fall through */ }
+    }
+    return `https://facebook.com/${info}`
+  },
   email: (info) => `mailto:${info}`,
   instagram: (info) => `https://instagram.com/${info.replace('@', '')}`,
 }

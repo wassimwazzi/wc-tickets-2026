@@ -234,7 +234,7 @@ export default function ListingDetailPage() {
                     </div>
                   </div>
 
-                  {seller.reputation_score !== null && (
+                  {seller.total_reviews && seller.total_reviews > 0 ? (
                     <div className="flex items-center gap-1 mb-4 p-3 bg-yellow-50 rounded-lg">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
@@ -243,8 +243,10 @@ export default function ListingDetailPage() {
                         />
                       ))}
                       <span className="ml-auto font-bold text-yellow-700">{Number(seller.reputation_score).toFixed(1)}</span>
-                      {seller.total_reviews && <span className="text-xs text-slate-600">({seller.total_reviews})</span>}
+                      <span className="text-xs text-slate-600">({seller.total_reviews})</span>
                     </div>
+                  ) : (
+                    <p className="text-xs text-slate-400 italic mb-4">No reviews yet</p>
                   )}
 
                   <div className="text-xs text-slate-600 flex items-center gap-2 pt-3 border-t border-slate-100">

@@ -77,7 +77,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {emailSent ? (
             <div className="text-center py-4">
               <p className="text-green-600 font-medium">✓ Magic link sent!</p>
-              <p className="text-sm text-slate-500 mt-1">Check your inbox (or <a href="http://localhost:54324" target="_blank" rel="noreferrer" className="underline text-wc-blue">Mailpit</a> for local dev).</p>
+              <p className="text-sm text-slate-500 mt-1">Check your inbox{import.meta.env.DEV && <> (or <a href="http://localhost:54324" target="_blank" rel="noreferrer" className="underline text-wc-blue">Mailpit</a> for local dev)</>}.</p>
             </div>
           ) : (
             <div className="flex gap-2">

@@ -134,11 +134,13 @@ export default function ListingCard({ listing }: { listing: Listing }) {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-rose-100 flex items-center justify-center text-xs font-bold text-slate-700 border border-slate-100">
                     {seller.full_name?.[0]?.toUpperCase() ?? 'U'}
                   </div>
-                  {seller.reputation_score !== null && (
+                  {seller.total_reviews && seller.total_reviews > 0 ? (
                     <span className="flex items-center gap-0.5 text-xs text-amber-600 font-medium">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                       {Number(seller.reputation_score).toFixed(1)}
                     </span>
+                  ) : (
+                    <span className="text-xs text-slate-400 italic">No reviews yet</span>
                   )}
                 </div>
               )}

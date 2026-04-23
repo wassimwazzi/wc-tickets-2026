@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import type { Database } from '../lib/database.types'
+import { toast } from '@/components/ui/toaster'
 
 type OfferInsert = Database['public']['Tables']['offers']['Insert']
 
@@ -76,6 +77,27 @@ export function useUpdateOffer() {
       queryClient.invalidateQueries({ queryKey: ['my-offers'] })
       queryClient.invalidateQueries({ queryKey: ['listings'] })
     },
+    onError: () => {
+      toast({ title: 'Failed to update offer', description: 'Please try again.', variant: 'destructive' })
+    },
+  })
+}
+
+export function useMarkOffersRead() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (buyerId: string) => {
+      const { error } = await supabase
+        .from('offers')
+        .update({ buyer_read_at: new Date().toISOString() } as never)
+        .eq('buyer_id', buyerId)
+        .in('status', ['accepted', 'declined', 'countered'])
+        .is('buyer_read_at', null)
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-offers'] })
+    },
   })
 }
 
@@ -104,6 +126,9 @@ export function useCounterOffer() {
       queryClient.invalidateQueries({ queryKey: ['offers'] })
       queryClient.invalidateQueries({ queryKey: ['offers-received'] })
       queryClient.invalidateQueries({ queryKey: ['my-offers'] })
+    },
+    onError: () => {
+      toast({ title: 'Failed to send counteroffer', description: 'Please try again.', variant: 'destructive' })
     },
   })
 }

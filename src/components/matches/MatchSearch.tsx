@@ -8,11 +8,12 @@ type Match = Database['public']['Tables']['matches']['Row']
 
 interface MatchSearchProps {
   onSelect: (match: Match) => void
+  onClear?: () => void
   placeholder?: string
   selectedMatch?: Match | null
 }
 
-export default function MatchSearch({ onSelect, placeholder = 'Search matches...', selectedMatch }: MatchSearchProps) {
+export default function MatchSearch({ onSelect, onClear, placeholder = 'Search matches...', selectedMatch }: MatchSearchProps) {
   const [search, setSearch] = useState('')
   const { data: matches = [], isLoading } = useMatches(search)
 
@@ -28,7 +29,7 @@ export default function MatchSearch({ onSelect, placeholder = 'Search matches...
           </div>
           <button
             type="button"
-            onClick={() => onSelect(selectedMatch)}
+            onClick={() => onClear ? onClear() : onSelect(selectedMatch)}
             className="text-xs text-blue-600 hover:underline"
           >
             Change

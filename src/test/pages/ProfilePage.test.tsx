@@ -44,6 +44,7 @@ vi.mock('@/hooks/useOffers', () => ({
   useMyOffers: () => ({ data: [] }),
   useUpdateOffer: () => ({ mutate: vi.fn(), isPending: false }),
   useCounterOffer: () => ({ mutate: vi.fn(), isPending: false }),
+  useMarkOffersRead: () => ({ mutate: vi.fn() }),
 }))
 
 vi.mock('@tanstack/react-query', async () => {

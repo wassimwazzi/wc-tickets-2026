@@ -9,7 +9,9 @@ export function useMatches(search?: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query: any = supabase.from('matches').select('*').order('match_date', { ascending: true })
       if (search) {
-        query = query.or(`team1.ilike.%${search}%,team2.ilike.%${search}%,venue.ilike.%${search}%,city.ilike.%${search}%`)
+        // Sanitize: strip PostgREST special chars to prevent filter injection
+        const safe = search.replace(/[.,()'"\\]/g, ' ').trim()
+        query = query.or(`team1.ilike.%${safe}%,team2.ilike.%${safe}%,venue.ilike.%${safe}%,city.ilike.%${safe}%`)
       }
       const { data, error } = await query
       if (error) throw error

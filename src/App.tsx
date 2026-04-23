@@ -16,11 +16,6 @@ const queryClient = new QueryClient({
       retry: 1,
       staleTime: 30000,
     },
-    mutations: {
-      onError: () => {
-        toast({ title: 'Something went wrong', description: 'Please try again.', variant: 'destructive' })
-      },
-    },
   },
 })
 
